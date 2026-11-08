@@ -1,0 +1,2 @@
+# Titanfall2VR-ChinesePatch
+以Youtube作者zecole的韩语补丁为基础制作的泰坦陨落2 VR模组汉语补丁
