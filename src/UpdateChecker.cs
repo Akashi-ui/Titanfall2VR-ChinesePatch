@@ -16,8 +16,8 @@ namespace Zecole.TitanfallKorean
 
     internal static class UpdateChecker
     {
-       // internal const string LatestPage = "https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/releases/latest";
-        //internal const string Api = "https://api.github.com/repos/zecole-vr/Titanfall2VR-KoreanPatch/releases/latest";
+       internal const string LatestPage = "https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/releases/latest";
+        internal const string Api = "https://api.github.com/repos/Akashi-ui/Titanfall2VR-ChinesePatch/releases/latest";
 
         internal static Version ParseVersion(string tag)
         {
@@ -43,8 +43,8 @@ namespace Zecole.TitanfallKorean
                 if (asset == null || !asset.ContainsKey("name") || (string)asset["name"] != "Titanfall2VR-Korean-Setup-v" + version + ".exe") continue;
                 url = asset.ContainsKey("browser_download_url") ? asset["browser_download_url"] as string : null;
                 digest = asset.ContainsKey("digest") ? asset["digest"] as string : null;
-                //if (url == null || !url.StartsWith("https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/releases/download/", StringComparison.Ordinal) ||
-                    //digest == null || !System.Text.RegularExpressions.Regex.IsMatch(digest, "^sha256:[a-fA-F0-9]{64}$")) { url = null; digest = null; }
+                if (url == null || !url.StartsWith("https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/releases/download/", StringComparison.Ordinal) ||
+                    digest == null || !System.Text.RegularExpressions.Regex.IsMatch(digest, "^sha256:[a-fA-F0-9]{64}$")) { url = null; digest = null; }
             }
             return new UpdateResult {
                 Version = version, Url = url, Sha256 = digest == null ? null : digest.Substring(7),

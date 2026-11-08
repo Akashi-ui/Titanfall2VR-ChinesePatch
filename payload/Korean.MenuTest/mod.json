@@ -6,11 +6,20 @@
   "RequiredOnClient": false,
   "Localisation": [
     "resource/korean_menu_english.txt",
+    "resource/dialogue_draft_english.txt",
     "resource/campaign_ui_english.txt",
     "resource/reviewed_ui_english.txt",
     "resource/mission_review_english.txt",
+    "resource/weapon_review_english.txt",
+    "resource/chapter_review_english.txt",
+    "resource/objective_review_english.txt",
+    "resource/zipline_review_english.txt",
+    "resource/equipment_hints_review_english.txt",
+    "resource/timeshift_review_english.txt",
+    "resource/comprehensive_hints_review_english.txt",
+    "resource/conversation_choices_review_english.txt",
     "resource/vr_1_0_25_review_english.txt",
-    "resource/r1_tchinese.txt"
+    "resource/vr_campaign_review_english.txt"
   ],
   "Scripts": [
     {

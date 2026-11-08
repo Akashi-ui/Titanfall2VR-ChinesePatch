@@ -286,13 +286,45 @@ private static string GetRunningGameProcesses()
                 if(Process.GetProcessesByName("Titanfall2").Length>0||Process.GetProcessesByName("Titanfall2VRLauncher").Length>0)throw new IOException("请先关闭正在运行的游戏或错误窗口。");
                 var launchInfo=Manager.CreateVrLaunch(root);
                 status.Text="正在检查最新的中文补丁…";
-                var release=await UpdateChecker.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version);
-                if(release.Version==null)throw new IOException("无法获取最新版本。请检查网络连接后重试。");
-                if(release.Newer) {
-                    status.Text="正在下载最新补丁…";
-                    var exe=await Manager.Download(release,new Progress<int>(v=>status.Text="下载最新补丁 · "+v+"%"));
-                    Process.Start(new ProcessStartInfo(exe,"--play "+Program.Quote(root)){UseShellExecute=true});SetBusy(false);Close();return;
-                }
+                
+var release = await UpdateChecker.CheckAsync(
+    Assembly.GetExecutingAssembly().GetName().Version
+);
+
+// 只有成功检查到新版本，并且下载地址和哈希都有效时，才自动下载更新。
+if (release != null &&
+    release.Version != null &&
+    release.Newer &&
+    !String.IsNullOrWhiteSpace(release.Url) &&
+    !String.IsNullOrWhiteSpace(release.Sha256))
+{
+    status.Text = "正在下载最新补丁…";
+    var exe = await Manager.Download(
+        release,
+        new Progress<int>(v => status.Text = "下载最新补丁 · " + v + "%")
+    );
+    Process.Start(new ProcessStartInfo(
+        exe,
+        "--play " + Program.Quote(root)
+    )
+    {
+        UseShellExecute = true
+    });
+    SetBusy(false);
+    Close();
+    return;
+}
+
+// 无法检查更新时，不再阻止安装，继续使用当前 EXE 内置的补丁。
+if (release == null || release.Version == null)
+{
+    updateStatus.Text = "好像没连接到更新服务器，使用当前安装包。";
+}
+else if (release.Newer)
+{
+    updateStatus.Text = "发现新版本，但无法获取有效下载信息，将使用当前安装包。";
+}
+
                 Version installedVersion;
                 if(Version.TryParse(Manager.Installed(root,@"TF2VR\mods\Korean.MenuTest\mod.json","Version"),out installedVersion) && UpdateChecker.ParseVersion(installedVersion.ToString())>UpdateChecker.ParseVersion(Assembly.GetExecutingAssembly().GetName().Version.ToString()))throw new IOException("설치된 简体中文补丁가 이 프로그램보다 새 버전입니다. 최신 프로그램으로 실행해 주세요.");
                 if(!Manager.IsReady(root,Assembly.GetExecutingAssembly().GetName().Version.ToString(3))) {
