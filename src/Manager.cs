@@ -27,7 +27,7 @@ namespace Zecole.TitanfallKorean {
    var args=new List<string>();
    foreach(var key in new[]{"arguments","vrArguments"})foreach(var arg in settings[key]) {
     var value=arg.Replace("{profile}","TF2VR").Replace("{width}","1280").Replace("{height}","720").Replace("{sound}","1");
-    if(value.Contains("{")||value.Contains("}"))throw new IOException("需要检查新的 VR 启动设置。请通过官方安装程序启动。");
+    if(value.Contains("{")||value.Contains("}"))throw new IOException("需要检查 VR 启动设置。请通过官方安装程序启动。");
     args.Add(Program.Quote(value));
    }
    var info=new System.Diagnostics.ProcessStartInfo(Path.Combine(root,@"TF2VR\tools\crash_monitor.exe")) {WorkingDirectory=root,UseShellExecute=false};
@@ -71,7 +71,7 @@ namespace Zecole.TitanfallKorean {
   internal static async Task<string> Download(UpdateResult release, IProgress<int> progress) {
    if(release.Url==null || release.Sha256==null)throw new IOException("没有可验证的安装文件。请检查是否有最新版本。");
    var folder=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Zecole","Titanfall2VR","Updates",Guid.NewGuid().ToString("N"));Directory.CreateDirectory(folder);
-   var path=Path.Combine(folder,"Titanfall2VR-Korean-Setup-v"+release.Version+".exe");
+   var path=Path.Combine(folder,"Titanfall2VR-Chinese-Setup-v"+release.Version+".exe");
    try {
     using(var client=new HttpClient()) {client.Timeout=TimeSpan.FromMinutes(5);client.DefaultRequestHeaders.UserAgent.ParseAdd("Zecole-KoreanPatch");
      using(var response=await client.GetAsync(release.Url,HttpCompletionOption.ResponseHeadersRead)) {response.EnsureSuccessStatusCode();

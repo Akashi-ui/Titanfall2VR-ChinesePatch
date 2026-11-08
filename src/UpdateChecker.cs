@@ -40,7 +40,7 @@ namespace Zecole.TitanfallKorean
             if (data.ContainsKey("assets")) foreach (object item in (System.Collections.IEnumerable)data["assets"])
             {
                 var asset = item as Dictionary<string, object>;
-                if (asset == null || !asset.ContainsKey("name") || (string)asset["name"] != "Titanfall2VR-Korean-Setup-v" + version + ".exe") continue;
+                if (asset == null || !asset.ContainsKey("name") || (string)asset["name"] != "Titanfall2VR-Chinese-Setup-v" + version + ".exe") continue;
                 url = asset.ContainsKey("browser_download_url") ? asset["browser_download_url"] as string : null;
                 digest = asset.ContainsKey("digest") ? asset["digest"] as string : null;
                 if (url == null || !url.StartsWith("https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/releases/download/", StringComparison.Ordinal) ||
@@ -64,7 +64,7 @@ namespace Zecole.TitanfallKorean
                 {
                     client.Timeout = timeout ?? TimeSpan.FromSeconds(8);
                     client.MaxResponseContentBufferSize = 1024 * 1024;
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Zecole-Titanfall2VR-Korean-Installer/" + current);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Akashi-ui-Titanfall2VR-Chinese-Installer/" + current);
                     client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
                     using (var response = await client.GetAsync(Api).ConfigureAwait(false))
                     {

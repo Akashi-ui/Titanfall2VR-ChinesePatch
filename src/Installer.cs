@@ -206,21 +206,21 @@ namespace Zecole.TitanfallKorean
             Text="Zecole · 泰坦陨落2 VR";Font=new Font("Microsoft YaHei UI",10F);BackColor=Color.FromArgb(16,21,28);ForeColor=Ink;
             AutoScaleMode=AutoScaleMode.Dpi;ClientSize=new Size(800,750);FormBorderStyle=FormBorderStyle.FixedDialog;MaximizeBox=false;StartPosition=FormStartPosition.CenterScreen;
             TextLabel("ZECOLE",26,19,190,27,14,Accent);
-            TextLabel("VR 简体中文补丁  /  v"+Assembly.GetExecutingAssembly().GetName().Version.ToString(3),510,25,267,23,10,Muted);
+            TextLabel("VR 中文补丁  /  v"+Assembly.GetExecutingAssembly().GetName().Version.ToString(3),510,25,267,23,10,Muted);
             var hero=new Panel{Left=24,Top=66,Width=752,Height=255};
             using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("hero.jpg"))if(stream!=null)hero.BackgroundImage=new Bitmap(stream);
             hero.BackgroundImageLayout=ImageLayout.Stretch;Controls.Add(hero);
             var caption=new Label{Text="TITANFALL 2  /  VR",Dock=DockStyle.Bottom,Height=43,BackColor=Color.FromArgb(24,32,42),ForeColor=Ink,Font=new Font("Segoe UI",17,FontStyle.Bold),Padding=new Padding(15,5,0,0)};hero.Controls.Add(caption);
             CardAt(334,77);
             TextLabel("VR 模组",40,341,170,23,10,Ink);
-            TextLabel("简体中文补丁",410,341,170,23,10,Ink);
+            TextLabel("中文补丁",410,341,170,23,10,Ink);
             vrStatus.SetBounds(40,365,340,42);vrStatus.ForeColor=Muted;vrStatus.BackColor=Card;Controls.Add(vrStatus);
             patchStatus.SetBounds(410,365,346,42);patchStatus.ForeColor=Muted;patchStatus.BackColor=Card;Controls.Add(patchStatus);
             vrBadge.SetBounds(252,341,128,23);patchBadge.SetBounds(628,341,128,23);
             foreach(var badge in new[]{vrBadge,patchBadge}){badge.TextAlign=ContentAlignment.MiddleRight;badge.BackColor=Card;Controls.Add(badge);}
-            ButtonStyle(launch,"▶ 检查并启动带有最新中文补丁的游戏",24,427,752,true);launch.Height=61;launch.Font=new Font("Microsoft YaHei UI",15,FontStyle.Bold);
+            ButtonStyle(launch,"▶ 检查更新并启动带有中文补丁的游戏",24,427,752,true);launch.Height=61;launch.Font=new Font("Microsoft YaHei UI",15,FontStyle.Bold);
             launch.Click+=async delegate{await PlayLatest(pathBox.Text);};
-            status.SetBounds(26,501,748,27);status.Text="一键完成版补丁版本检查、安装和游戏启动。";Controls.Add(status);
+            status.SetBounds(26,501,748,27);status.Text="一键完成补丁版本检查、安装和游戏启动。";Controls.Add(status);
             updateStatus.SetBounds(26,532,748,25);updateStatus.ForeColor=Muted;Controls.Add(updateStatus);
             progress.SetBounds(24,562,752,4);progress.Style=ProgressBarStyle.Marquee;progress.Visible=false;Controls.Add(progress);
             TextLabel("游戏目录",26,579,88,27,9,Muted);pathBox.SetBounds(126,575,527,31);pathBox.BackColor=Card;pathBox.ForeColor=Ink;pathBox.AutoEllipsis=true;pathBox.TextAlign=ContentAlignment.MiddleLeft;pathBox.Padding=new Padding(10,0,10,0);Controls.Add(pathBox);
@@ -230,7 +230,7 @@ namespace Zecole.TitanfallKorean
             ButtonStyle(vrInstaller,"下载 VR 模组",24,621,252,false);vrInstaller.Click+=delegate{Process.Start(new ProcessStartInfo("https://github.com/CircuitLord/CircuitLordVRModInstaller/releases/latest"){UseShellExecute=true});};
             ButtonStyle(restore,"移除中文补丁",288,621,174,false);restore.Click+=async delegate{await Apply("Restore",pathBox.Text);};
             downloadUpdate.Text="更新日志 · GitHub";downloadUpdate.SetBounds(486,630,240,27);downloadUpdate.LinkColor=Accent;Controls.Add(downloadUpdate);downloadUpdate.LinkClicked+=delegate{Process.Start(new ProcessStartInfo(UpdateChecker.LatestPage){UseShellExecute=true});};
-            messages.SetBounds(26,674,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="由 YouTube 创作者 Zecole 制作韩语插件,？？？进行汉化  ·  请在游戏设置 → 音频中开启字幕。\r\n本补丁基于 VR 1.0.25 翻译 · 游戏内显示效果仍需实测。";Controls.Add(messages);
+            messages.SetBounds(26,674,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="由 YouTube 创作者 Zecole 制作韩语翻译插件,？？？（我怎么现在还没想好网名）进行汉化  ·  请在游戏设置 → 音频中开启字幕。\r\n本补丁基于 VR 1.0.25 翻译 · 游戏内显示效果仍需实测。";Controls.Add(messages);
             AttachCardContents();pathBox.TextChanged+=delegate{pathTip.SetToolTip(pathBox,pathBox.Text);RefreshInstalled();};Shown+=async delegate{RefreshInstalled();await CheckUpdate();};
             FormClosing+=delegate(object sender,FormClosingEventArgs e){if(busy)e.Cancel=true;};
         }
