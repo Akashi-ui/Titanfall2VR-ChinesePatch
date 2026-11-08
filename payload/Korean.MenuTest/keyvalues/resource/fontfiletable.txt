@@ -1,0 +1,12 @@
+FontFileTable
+{
+    "Default" "resource/NotoSansTC-Medium.ttf"
+    "DefaultBold" "resource/NotoSansTC-SemiBold.ttf"
+    "Titanfall" "resource/NotoSansTC-SemiBold.ttf"
+    "arial unicode ms" "resource/NotoSansTC-Medium.ttf"
+    "arial" "resource/NotoSansTC-Medium.ttf"
+    "arial bold" "resource/NotoSansTC-SemiBold.ttf"
+    "arial narrow" "resource/NotoSansTC-Medium.ttf"
+    "tahoma" "resource/NotoSansTC-Medium.ttf"
+    "tahoma bold" "resource/NotoSansTC-SemiBold.ttf"
+}

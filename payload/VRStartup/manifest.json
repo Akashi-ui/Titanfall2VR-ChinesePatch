@@ -1,0 +1,104 @@
+{
+  "original_sha256": "815f0d130baf2532db2df6a8bff8b6e6eb6b25d16a1db792d8b8994f9183b634",
+  "translated_sha256": "16B0EC8EF098F4A47A780C84CD1A3CE4F50685E0D3674B4CB41A204DC2288291",
+  "width": 1536,
+  "height": 2048,
+  "rows": [
+    {
+      "text": "《泰坦陨落2》VR 版是一款站立游玩的游戏",
+      "original_bounds": [
+        406,
+        44,
+        1129,
+        84
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        407,
+        301,
+        722,
+        38
+      ]
+    },
+    {
+      "text": "请清除游玩区域附近的障碍物",
+      "original_bounds": [
+        505,
+        45,
+        1032,
+        84
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        516,
+        429,
+        505,
+        38
+      ]
+    },
+    {
+      "text": "铁驭姿态校准",
+      "original_bounds": [
+        491,
+        39,
+        1046,
+        78
+      ],
+      "font_size": 42,
+      "output_bounds": [
+        652,
+        551,
+        232,
+        38
+      ]
+    },
+    {
+      "text": "展开双臂，然后按住两个扳机键",
+      "original_bounds": [
+        383,
+        44,
+        1155,
+        84
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        496,
+        686,
+        544,
+        39
+      ]
+    },
+    {
+      "text": "铁驭校准完成",
+      "original_bounds": [
+        425,
+        39,
+        1113,
+        78
+      ],
+      "font_size": 42,
+      "output_bounds": [
+        652,
+        806,
+        232,
+        38
+      ]
+    },
+    {
+      "text": "作者: CircuitLord",
+      "original_bounds": [
+        523,
+        44,
+        1013,
+        84
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        616,
+        940,
+        306,
+        37
+      ]
+    }
+  ]
+}

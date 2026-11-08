@@ -1,0 +1,11 @@
+Original unmodified TTFs: IBM Plex Sans KR Medium and SemiBold (hinted).
+Copyright IBM Corp. SIL Open Font License 1.1. See OFL-IBM-Plex.txt.
+Official source: https://github.com/IBM/plex/tree/master/packages/plex-sans-kr
+Converted font asset name: TF2VR Korean UI Conversion.
+The glyph atlas is regenerated from the bundled IBM Plex Sans KR TTFs.
+The converted font data remains under SIL OFL 1.1; it is not an IBM product.
+Legacy RPak filename and engine font identifiers are retained for compatibility.
+Font mapping/layout reference: HangulPatchStudio public Titanfall 2 Korean font asset.
+https://hangulpatchstudio.com/deck/titanfall-2
+No reference translation text, glyph pixels, or installer is included.
+RPak format reference: https://github.com/r-ex/rsx

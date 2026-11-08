@@ -1,0 +1,9 @@
+LIBRARY kernel32.dll
+EXPORTS
+VirtualProtect
+GetModuleHandleA
+GetModuleFileNameA
+CreateFileA
+WriteFile
+CloseHandle
+SetFilePointer

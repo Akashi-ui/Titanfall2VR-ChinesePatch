@@ -1,0 +1,24 @@
+{
+  "Name": "Korean.MenuTest",
+  "Description": "Simplified Chinese translation and Noto Sans CJK fonts; based on the TF2VR 1.0.25 Korean translation project",
+  "Version": "0.2.29",
+  "LoadPriority": 100,
+  "RequiredOnClient": false,
+  "Localisation": [
+    "resource/korean_menu_english.txt",
+    "resource/campaign_ui_english.txt",
+    "resource/reviewed_ui_english.txt",
+    "resource/mission_review_english.txt",
+    "resource/vr_1_0_25_review_english.txt",
+    "resource/r1_tchinese.txt"
+  ],
+  "Scripts": [
+    {
+      "Path": "korean_menu_test.nut",
+      "RunOn": "UI",
+      "UICallback": {
+        "After": "KoreanMenuTest_Init"
+      }
+    }
+  ]
+}
