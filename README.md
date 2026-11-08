@@ -1,46 +1,50 @@
-## 패치노트
+## 说明
 
-- VR 모드 1.0.25를 기준으로 미번역·변경된 문구 166개와 관련 안내 스크립트를 수정했습니다.
-- VR 해상도, 계단 현상 완화, 반짝임 감소, 타이탄 머리 방향 회전 설정과 도움말을 번역했습니다.
-- 사첼 폭탄 기폭, 타이탄 능력 방향 및 사망 시 조언을 최신 조작법에 맞췄습니다.
-- 후반부 타이탄 시스템 메시지, 프로토콜, 홀로그램 상태창 등 누락된 번역을 보완했습니다.
-- 짚라인 호출 패턴과 첫 캘리브레이션 안내 이미지의 파일 호환성을 확인했습니다.
+- 本补丁基于zecole-vr的v0.2.29版本韩语翻译补丁进行修改，适用于CircuitLord的泰坦陨落2 VR模组1.0.25。
+- 翻译了 VR 分辨率、抗锯齿、减少闪烁、泰坦头部方向旋转设置及相关帮助说明。
+- 根据最新操作方式，更新了炸药包引爆、泰坦技能方向以及死亡时的提示内容。
+- 补充了后期泰坦系统消息、协议内容、全息状态窗口等遗漏的翻译。
+- 确认了滑索呼叫提示以及首次校准说明图片的文件兼容性。
+- 在玩游戏时你可能会遇到VR晕动症，如果你感到恶心想吐，立刻摘下头显并休息一下
 
-한글패치 **v0.2.29** · **PCVR (Windows, Steam/EA)** · 검토 대상 VR 모드 **1.0.25**
-별도 시험 폴더에서 설치·업데이트·재설치·복원과 손상된 패키지 거부를 확인했습니다. 실제 게임 폴더 설치와 헤드셋 플레이 검증은 진행하지 않았습니다.
-첨부 파일의 SHA-256은 `SHA256SUMS.txt`에서 확인하실 수 있습니다.
+适用于**PCVR (Windows, Steam/EA)** 和 **1.0.25**版本的VR模组
+汉化目前已在游戏内进行了初步验证，大部分可用，但仍有少量豆腐块。在安装程序上目前暂未实现更新，但是安装和卸载补丁已经可用。文件的SHA-256值可以在 `SHA256SUMS.txt`找到
 
-유튜브 크리에이터 **제콜**이 만들었습니다.
+这个模组由Youtube创作者 **zecole** 制作，由     进行汉化翻译
 
-유튜브 채널: [제콜 @zecole](https://www.youtube.com/@zecole)
+Youtube链接: [Zecole @zecole](https://www.youtube.com/@zecole)
 
-## 설치 방법
+我的Bilibili链接：[噠喵](https://space.bilibili.com/21588777)
 
-**타이탄폴 2 설치 → VR 모드 설치 → 한글패치 설치** 순서로 진행해 주세요.
+## 安装方法
 
-1. 타이탄폴 2를 설치합니다.
-2. [VR 모드 설치기](https://github.com/CircuitLord/CircuitLordVRModInstaller/releases/latest)로 타이탄폴 2 VR 모드를 설치합니다.
-3. [최신 릴리스](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/releases/latest)의 Assets(첨부 파일)에서 한글패치 설치 파일(`Titanfall2VR-Korean-Setup-버전.exe`)을 내려받습니다.
-4. 게임을 종료한 뒤 설치 파일을 실행합니다. 자동으로 찾은 게임 폴더를 확인하고 **최신 한글패치 버전 확인 및 실행**을 누릅니다. 폴더를 찾지 못하면 **변경**으로 타이탄폴 2 설치 폴더를 선택합니다. Windows 관리자 권한 요청이 나오면 허용해 주세요.
-5. 최신 한글패치를 확인하고 필요한 설치·업데이트가 끝나면 VR 게임이 실행됩니다. 다음 실행 때도 같은 버튼을 누르세요. VR 모드 자체의 업데이트는 공식 VR 모드 설치기에서 진행합니다.
-6. 게임의 **설정 → 사운드**에서 **자막을 켜 주세요.** 자막을 켜야 대사 자막이 표시됩니다.
+请按此顺序安装**安装Titanfall 2  → 安装 VR 模组 → 安装本中文补丁**
 
-## 제거 방법
+1. 安装 Titanfall 2
+2. 使用[VR 模组安装程序](https://github.com/CircuitLord/CircuitLordVRModInstaller/releases/latest)安装Titanfall 2 VR 模组。
+3. 从[最新版本](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/releases/latest)的找到(`Titanfall2VR-Chinese-Setup-版本号.exe`)并下载。
+4. 退出游戏并运行安装程序。确认自动找到的游戏文件夹是否正确，然后点击 **检查并启动带有最新中文补丁的游戏**。如果找不到该文件夹​​，请点击 **浏览**手动指定Titanfall 2的安装文件夹，如果提示需要Windows管理员权限，点击允许。
+5. 这里应该写有关自动更新的事，但我没有弄好，我也不知道我能不能弄好
+6. 请在游戏内的 **设置 → 声音** 里开启 **字幕** 来显示对话字幕
 
-게임을 종료한 뒤 실행기의 **한글패치 제거**를 누르세요.
+## 删除方法
 
-## 폰트 저작권
+关闭游戏后，点击补丁安装器里的 **移除中文补丁**。
 
-사용 폰트는 **IBM Plex Sans KR**입니다.
+## 字体版权
 
-Copyright © 2017 IBM Corp. with Reserved Font Name “Plex”
+使用的字体是 **Noto Sans TC**。
 
-폰트에는 **SIL Open Font License 1.1**이 적용됩니다. [폰트 라이선스 전문](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/blob/main/OFL-IBM-Plex.txt)을 확인해 주세요.
+Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
 
-## 검수 상태
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+https://openfontlicense.org
 
-**튜토리얼 외의 구간은 아직 검수하지 않은 버전입니다.**
+## 校对状态
 
-## 수정·오역 제보
+**除了第一章以外，其他章节的翻译尚未验证，因为我VR枪法特别烂，打不过**
 
-수정 및 오역 관련 의견을 받고 있습니다. 이 저장소의 [Issues 탭](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch/issues)에 남겨 주세요.
+## 报告问题和提出建议
+
+如果你发现了不合适的翻译或错误，请在[Issues](https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/issues/)中留下评论，可以的话请带上图片。
