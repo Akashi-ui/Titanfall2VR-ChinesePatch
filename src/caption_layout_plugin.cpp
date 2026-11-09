@@ -96,7 +96,7 @@ static void TryZipline(HMODULE mod) {
  *copySlot=(void*)&CopyPrompt;VirtualProtect(copySlot,8,old,&old);Log("Zipline prompt localization enabled (validated pattern).");
 }
 
-static const char* GetString(void*,int p){return p==0?"Korean Caption Layout":p==1?"KO_CAPTION":"KoreanCaptionLayout";}
+static const char* GetString(void*,int p){return p==0?"Chinese Caption Layout":p==1?"KO_CAPTION":"ChineseCaptionLayout";}
 static I64 GetField(void*,int p){return p==0?2:0x80d0ff;}
 static void Init(void*,HMODULE,const PluginNorthstarData* d,bool){selfModule=d->pluginHandle;TryInstall(GetModuleHandleA("client.dll"));TryZipline(GetModuleHandleA("Titanfall2VR.dll"));}
 static void Finalize(void*){}

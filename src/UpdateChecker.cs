@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
-namespace Zecole.TitanfallKorean
+namespace Zecole.TitanfallChinese
 {
     internal sealed class UpdateResult
     {

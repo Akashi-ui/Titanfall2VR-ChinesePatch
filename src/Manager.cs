@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
-namespace Zecole.TitanfallKorean {
+namespace Zecole.TitanfallChinese {
  internal static class Manager {
   internal const string ManifestUrl="https://raw.githubusercontent.com/CircuitLord/CircuitLordVRModInstaller/main/manifest-v3.json";
   internal static string Installed(string root,string relative,string key) {
@@ -38,8 +38,8 @@ namespace Zecole.TitanfallKorean {
    return info;
   }
   private static string Fingerprint(string root) {
-   var files=new List<string>(Directory.GetFiles(Path.Combine(root,@"TF2VR\mods\Korean.MenuTest"),"*",SearchOption.AllDirectories));
-   files.Add(Path.Combine(root,@"TF2VR\plugins\Titanfall2VR.dll"));files.Add(Path.Combine(root,@"TF2VR\plugins\Korean.CaptionLayout.dll"));
+   var files=new List<string>(Directory.GetFiles(Path.Combine(root,@"TF2VR\mods\Chinese.MenuTest"),"*",SearchOption.AllDirectories));
+   files.Add(Path.Combine(root,@"TF2VR\plugins\Titanfall2VR.dll"));files.Add(Path.Combine(root,@"TF2VR\plugins\Chinese.CaptionLayout.dll"));
    files.Add(Path.Combine(root,@"TF2VR\Northstar.dll"));
    var cockpit=Path.Combine(root,@"TF2VR\mods\Titanfall2VR.Cockpit\mod");
    files.Add(Path.Combine(cockpit,@"resource\tf2vr\startup\text.r8"));
@@ -56,9 +56,9 @@ namespace Zecole.TitanfallKorean {
   }
   internal static bool IsReady(string root,string version) {
    try {
-    if(Installed(root,@"TF2VR\mods\Korean.MenuTest\mod.json","Version")!=version)return false;
+    if(Installed(root,@"TF2VR\mods\Chinese.MenuTest\mod.json","Version")!=version)return false;
     var enabled=new JavaScriptSerializer().Deserialize<Dictionary<string,Dictionary<string,bool>>>(File.ReadAllText(Path.Combine(root,@"TF2VR\enabledmods.json")));
-    if(!enabled["Korean.MenuTest"][version])return false;
+    if(!enabled["Chinese.MenuTest"][version])return false;
     return File.ReadAllText(ReadyFile(root))==Fingerprint(root);
    }catch{return false;}
   }
@@ -73,7 +73,7 @@ namespace Zecole.TitanfallKorean {
    var folder=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Zecole","Titanfall2VR","Updates",Guid.NewGuid().ToString("N"));Directory.CreateDirectory(folder);
    var path=Path.Combine(folder,"Titanfall2VR-Chinese-Setup-v"+release.Version+".exe");
    try {
-    using(var client=new HttpClient()) {client.Timeout=TimeSpan.FromMinutes(5);client.DefaultRequestHeaders.UserAgent.ParseAdd("Zecole-KoreanPatch");
+    using(var client=new HttpClient()) {client.Timeout=TimeSpan.FromMinutes(5);client.DefaultRequestHeaders.UserAgent.ParseAdd("Zecole-ChinesePatch");
      using(var response=await client.GetAsync(release.Url,HttpCompletionOption.ResponseHeadersRead)) {response.EnsureSuccessStatusCode();
       long length=response.Content.Headers.ContentLength ?? 0,total=0;
       if(length>100*1024*1024)throw new IOException("安装文件大小超出预期范围。");
