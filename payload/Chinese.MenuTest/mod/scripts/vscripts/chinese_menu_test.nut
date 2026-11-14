@@ -1,5 +1,5 @@
-global function KoreanMenuTest_Init
-void function KoreanMenuTest_Init()
+global function ChineseMenuTest_Init
+void function ChineseMenuTest_Init()
 {
     ClientCommand( "cc_rui 0" )
    ClientCommand( "cc_lang tchinese" )
