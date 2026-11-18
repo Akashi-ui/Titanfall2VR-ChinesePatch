@@ -50,7 +50,7 @@ namespace Zecole.TitanfallChinese
                 Version = version, Url = url, Sha256 = digest == null ? null : digest.Substring(7),
                 Newer = comparison > 0,
                 Message = comparison > 0 ? "发现新版本 v" + version + "，请下载最新版本。" :
-                    comparison == 0 ? "当前已是最新版本。（GitHub v" + version + "）" :
+                    comparison == 0 ? "当前已是最新版本（GitHub 上的版本为 v" + version + "）" :
                     "GitHub 上的最新稳定版为 v" + version + ""
             };
         }
@@ -75,7 +75,7 @@ namespace Zecole.TitanfallChinese
             }
             catch (Exception)
             {
-                return new UpdateResult { Message = "无法检查最新版本，但你仍然可以继续安装。" };
+                return new UpdateResult { Message = "暂时无法连接更新服务器，不影响安装和启动，可以稍后再检查。" };
             }
         }
     }

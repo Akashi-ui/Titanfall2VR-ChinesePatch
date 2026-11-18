@@ -5,9 +5,9 @@
 $ErrorActionPreference='Stop'
 [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
 try {
- if(Get-Process Titanfall2,Titanfall2VRLauncher -ErrorAction SilentlyContinue){throw '在安装或修复《泰坦陨落 2》之前，请先将其关闭。'}
+ if(Get-Process Titanfall2,Titanfall2VRLauncher -ErrorAction SilentlyContinue){throw '安装或修复之前，请先关闭《泰坦陨落 2》和 VR 启动器。'}
  $gamePath=(Resolve-Path -LiteralPath $GameRoot).Path
- if(-not(Test-Path -LiteralPath (Join-Path $gamePath 'Titanfall2VRLauncher.exe'))){throw '请先安装 VR 模组。'}
+ if(-not(Test-Path -LiteralPath (Join-Path $gamePath 'Titanfall2VRLauncher.exe'))){throw '没有找到 VR 模组，请先安装 VR 模组后再安装中文补丁。'}
  $record=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $gamePath '.circuitlord-vr-mods\Titanfall2VR.json') | ConvertFrom-Json
  $profileRoot=(Resolve-Path -LiteralPath (Join-Path $gamePath 'TF2VR')).Path
  $modPath=[IO.Path]::GetFullPath((Join-Path $profileRoot 'mods\Chinese.MenuTest'))
@@ -18,19 +18,19 @@ try {
  $startupHash=if(Test-Path -LiteralPath $startupPath){(Get-FileHash -LiteralPath $startupPath -Algorithm SHA256).Hash}else{''}
  $validBackup=(Test-Path -LiteralPath $startupOriginal) -and ((Get-FileHash -LiteralPath $startupOriginal -Algorithm SHA256).Hash -eq $startupManifest.original_sha256)
  $replaceStartup=($Action -eq 'Install' -and $startupHash -eq $startupManifest.original_sha256) -or ($startupHash -eq $startupManifest.translated_sha256 -and $validBackup)
- if(-not $replaceStartup){Write-Output '启动教程保留了当前 VR 模式下的文件。'}
- foreach($target in @($modPath,$pluginPath)){if(-not $target.StartsWith($profileRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '目标安装路径不正确'}}
- if(Test-Path -LiteralPath $modPath){$existing=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $modPath 'mod.json')|ConvertFrom-Json;if($existing.Name -ne 'Chinese.MenuTest'){throw '安装位置存在另一个模组。'}}
+ if(-not $replaceStartup){Write-Output '启动教程文件保持当前版本，未做替换。'}
+ foreach($target in @($modPath,$pluginPath)){if(-not $target.StartsWith($profileRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '目标安装路径不正确，已取消安装。'}}
+ if(Test-Path -LiteralPath $modPath){$existing=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $modPath 'mod.json')|ConvertFrom-Json;if($existing.Name -ne 'Chinese.MenuTest'){throw '安装位置已经有其他模组，请先移除该模组或换一个游戏目录。'}}
  $stage=$null
  if($Action -eq 'Install') {
   $inventory=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'package-hashes.json')|ConvertFrom-Json
   foreach($entry in $inventory.PSObject.Properties){
    $source=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot $entry.Name))
-   if(-not $source.StartsWith($PSScriptRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '安装文件路径不正确。'}
-   if((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash -ne $entry.Value){throw ('安装文件验证失败: '+$entry.Name)}
+   if(-not $source.StartsWith($PSScriptRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '安装包内的文件路径不正确，安装已取消。'}
+   if((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash -ne $entry.Value){throw ('安装文件校验失败，请重新下载安装程序。出错文件：'+$entry.Name)}
   }
   $sourceManifest=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'Chinese.MenuTest\mod.json')|ConvertFrom-Json
-  if($sourceManifest.Name -ne 'Chinese.MenuTest'){throw '翻译补丁的相关信息不正确'}
+  if($sourceManifest.Name -ne 'Chinese.MenuTest'){throw '中文补丁信息不完整，请重新下载安装程序。'}
   $stage=Join-Path $profileRoot ('chinese-menu-staging-'+[Guid]::NewGuid().ToString('N'))
   New-Item -ItemType Directory -Path $stage | Out-Null
   $integration=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'integration-baseline.json')|ConvertFrom-Json
@@ -42,7 +42,13 @@ try {
   }
   $menuKnown=$northstarKnown -and $vrKnown
   foreach($rel in @('scripts/vscripts/tf2vr_menu.nut','resource/ui/menus/ingame_sp.menu')){
-   if(-not(MatchesBaseline (Join-Path $profileRoot ('mods/Titanfall2VR.Cockpit/mod/'+$rel)) $integration.cockpit.$rel)){$menuKnown=$false}
+   $menuUpstream=Join-Path $profileRoot ('mods/Titanfall2VR.Cockpit/mod/'+$rel)
+   $menuMatch=MatchesBaseline $menuUpstream $integration.cockpit.$rel
+   if(-not $menuMatch -and $integration.compatibleFileVariants){
+    $menuVariants=$integration.compatibleFileVariants.PSObject.Properties[$rel]
+    if($menuVariants){foreach($menuVariant in $menuVariants.Value){if(MatchesBaseline $menuUpstream $menuVariant.sha256){$menuMatch=$true;break}}}
+   }
+   if(-not $menuMatch){$menuKnown=$false}
   }
   $skipped=@()
   $sourceMod=Join-Path $PSScriptRoot 'Chinese.MenuTest'
@@ -71,10 +77,18 @@ try {
    Copy-Item -LiteralPath $copySource -Destination $destination
   }
   if($northstarKnown){Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Chinese.CaptionLayout.dll') -Destination $stage}
-  Write-Output ('변경된 원본으로 인해 제외한 번역 파일: '+$skipped.Count)
+  Write-Output ('由于原始文件发生更改而排除的翻译文件: : '+$skipped.Count)
   foreach($rel in $skipped){Write-Output ('  '+$rel)}
  }
- $backup=Join-Path $profileRoot ('chinese-menu-backups\v0229-'+[Guid]::NewGuid().ToString('N'))
+ 
+$patchVersion = ((Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'Chinese.MenuTest\mod.json') | ConvertFrom-Json).Version).Trim()
+
+if ($patchVersion -notmatch '^\d+\.\d+\.\d+$') {
+    throw '补丁版本号格式不正确，必须使用主版本号.次版本号.修订号格式，例如 1.0.0。'
+}
+
+$backup = Join-Path $profileRoot ('chinese-menu-backups\v' + $patchVersion + '-' + [Guid]::NewGuid().ToString('N'))
+
  New-Item -ItemType Directory -Path $backup -Force | Out-Null
  if($replaceStartup){Copy-Item -LiteralPath $startupPath -Destination (Join-Path $backup 'startup-text-before.r8')}
  if($replaceStartup -and $startupHash -eq $startupManifest.original_sha256){
@@ -103,7 +117,7 @@ try {
   if($Action -eq 'Install'){$startupSource=Join-Path $PSScriptRoot 'VRStartup\text.r8';$expectedStartup=$startupManifest.translated_sha256}
   else {$startupSource=$startupOriginal;$expectedStartup=$startupManifest.original_sha256}
   Copy-Item -LiteralPath $startupSource -Destination $startupPath -Force
-  if((Get-FileHash -LiteralPath $startupPath -Algorithm SHA256).Hash -ne $expectedStartup){throw 'VR 启动程序？验证失败。'}
+  if((Get-FileHash -LiteralPath $startupPath -Algorithm SHA256).Hash -ne $expectedStartup){throw 'VR 启动教程文件校验失败，安装已回滚。'}
   }
  } catch {
   if($startupChanged){Copy-Item -LiteralPath (Join-Path $backup 'startup-text-before.r8') -Destination $startupPath -Force}
@@ -114,7 +128,7 @@ try {
   if(Test-Path -LiteralPath (Join-Path $backup 'enabledmods.json')){Copy-Item -LiteralPath (Join-Path $backup 'enabledmods.json') -Destination $enabledPath -Force}
   throw
  }
- Write-Output ('用于备份现有文件的位置: '+$backup)
- if($Action -eq 'Install'){Write-Output '中文补丁已安装。请通过 VR 模组的安装程序启动游戏。'}
- else {Write-Output '已移除补丁，仅将能够确认的启动引导内容恢复为原始版本。'}
+ Write-Output ('现有文件的备份位置：'+$backup)
+ if($Action -eq 'Install'){Write-Output '中文补丁已安装。请通过 VR 模组启动器进入游戏。'}
+ else {Write-Output '已移除中文补丁，并将可确认的启动引导文件恢复为原始版本。'}
 }catch{Write-Host $_.Exception.Message -ForegroundColor Red;exit 1}

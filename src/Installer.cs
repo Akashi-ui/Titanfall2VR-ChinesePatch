@@ -154,15 +154,15 @@ namespace Zecole.TitanfallChinese
         internal static string WriteErrorLog(string context, Exception ex)
         {
             string fileName = "Titanfall2VR-Chinese-Installer-Error.txt";
-            string content = "Titanfall 2 VR 中文补丁安装器错误日志\\r\\n"
-                + "时间: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\\r\\n"
-                + "位置: " + context + "\\r\\n"
-                + "安装器: " + Application.ExecutablePath + "\\r\\n"
-                + "系统: " + Environment.OSVersion + "\\r\\n"
-                + "运行身份: " + WindowsIdentity.GetCurrent().Name + "\\r\\n"
+            string content = "Titanfall 2 VR 中文补丁安装器错误日志\r\n"
+                + "发生时间：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\r\n"
+                + "出错环节：" + context + "\r\n"
+                + "安装程序路径：" + Application.ExecutablePath + "\r\n"
+                + "系统版本：" + Environment.OSVersion + "\r\n"
+                + "运行账户：" + WindowsIdentity.GetCurrent().Name + "\r\n"
                 + "----------------------------------------\\r\\n"
-                + (ex == null ? "未提供异常详情。" : ex.ToString())
-                + "\\r\\n\\r\\n";
+                + (ex == null ? "（没有异常详情）" : ex.ToString())
+                + "\r\n\r\n";
 
             try
             {
@@ -266,19 +266,19 @@ namespace Zecole.TitanfallChinese
             patchStatus.SetBounds(410,365,346,50);patchStatus.ForeColor=Muted;patchStatus.BackColor=Card;Controls.Add(patchStatus);
             vrBadge.SetBounds(232,341,148,23);patchBadge.SetBounds(608,341,148,23);
             foreach(var badge in new[]{vrBadge,patchBadge}){badge.TextAlign=ContentAlignment.MiddleRight;badge.BackColor=Card;Controls.Add(badge);}
-            ButtonStyle(launch,"▶ 检查补丁更新并启动游戏(带有中文补丁)",24,437,752,true);launch.Height=61;launch.Font=new Font("Microsoft YaHei UI",15,FontStyle.Bold);
+            ButtonStyle(launch,"▶ 检查更新并启动游戏（含中文补丁）",24,437,752,true);launch.Height=61;launch.Font=new Font("Microsoft YaHei UI",15,FontStyle.Bold);
             launch.Click+=async delegate{await PlayLatest(pathBox.Text);};
-            status.SetBounds(26,511,748,27);status.Text="一键完成补丁版本检查、安装和游戏启动。";Controls.Add(status);
+            status.SetBounds(26,511,748,27);status.Text="一键检查补丁更新、安装补丁并启动游戏。";Controls.Add(status);
             updateStatus.SetBounds(26,542,748,25);updateStatus.ForeColor=Muted;Controls.Add(updateStatus);
             progress.SetBounds(24,572,752,4);progress.Style=ProgressBarStyle.Marquee;progress.Visible=false;Controls.Add(progress);
             TextLabel("游戏目录",26,589,88,27,9,Muted);pathBox.SetBounds(126,585,527,31);pathBox.BackColor=Card;pathBox.ForeColor=Ink;pathBox.AutoEllipsis=true;pathBox.TextAlign=ContentAlignment.MiddleLeft;pathBox.Padding=new Padding(10,0,10,0);Controls.Add(pathBox);
             var games=Program.FindGames();if(games.Count>0)pathBox.Text=games[0];pathTip.SetToolTip(pathBox,pathBox.Text);
             ButtonStyle(browse,"浏览",665,585,111,false);browse.Height=31;
-            browse.Click+=delegate{using(var d=new FolderBrowserDialog{Description="选择包含 Titanfall2.exe 的文件夹",ShowNewFolderButton=false})if(d.ShowDialog(this)==DialogResult.OK)pathBox.Text=d.SelectedPath;};
+            browse.Click+=delegate{using(var d=new FolderBrowserDialog{Description="选择 Titanfall 2 的安装文件夹（文件夹里应有 Titanfall2.exe）",ShowNewFolderButton=false})if(d.ShowDialog(this)==DialogResult.OK)pathBox.Text=d.SelectedPath;};
             ButtonStyle(vrInstaller,"下载 VR 模组",24,631,252,false);vrInstaller.Click+=delegate{Process.Start(new ProcessStartInfo("https://github.com/CircuitLord/CircuitLordVRModInstaller/releases/latest"){UseShellExecute=true});};
             ButtonStyle(restore,"移除中文补丁",288,631,174,false);restore.Click+=async delegate{await Apply("Restore",pathBox.Text);};
-            downloadUpdate.Text="更新日志 · GitHub";downloadUpdate.SetBounds(486,640,240,27);downloadUpdate.LinkColor=Accent;Controls.Add(downloadUpdate);downloadUpdate.LinkClicked+=delegate{Process.Start(new ProcessStartInfo(UpdateChecker.LatestPage){UseShellExecute=true});};
-            messages.SetBounds(26,684,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="本韩语翻译插件由YouTube作者 Zecole 原创,由Bilibili 噠喵 进行汉化  ·  请在游戏设置 → 音频中开启字幕。\r\n本补丁基于 VR 1.0.25 翻译 · 游戏内显示效果仍需实测。";Controls.Add(messages);
+            downloadUpdate.Text="查看更新日志（GitHub）";downloadUpdate.SetBounds(486,640,240,27);downloadUpdate.LinkColor=Accent;Controls.Add(downloadUpdate);downloadUpdate.LinkClicked+=delegate{Process.Start(new ProcessStartInfo(UpdateChecker.LatestPage){UseShellExecute=true});};
+            messages.SetBounds(26,684,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="本汉化基于 YouTube 作者 Zecole 的韩语版翻译，由 Bilibili「噠喵」汉化。请在游戏内「设置 → 音频」中开启字幕。\r\n本补丁对应 VR 模组 1.0.25 版本，游戏内显示效果仍需实测。";Controls.Add(messages);
             AttachCardContents();pathBox.TextChanged+=delegate{pathTip.SetToolTip(pathBox,pathBox.Text);RefreshInstalled();};Shown+=async delegate{RefreshInstalled();await CheckUpdate();};
             FormClosing+=delegate(object sender,FormClosingEventArgs e){if(busy)e.Cancel=true;};
         }
@@ -287,35 +287,35 @@ namespace Zecole.TitanfallChinese
             SetBusy(true);
             try {
                 pathBox.Text=root;
-                if(Process.GetProcessesByName("Titanfall2").Length>0||Process.GetProcessesByName("Titanfall2VRLauncher").Length>0)throw new IOException("请先关闭正在运行的游戏（任务管理器搜索Titanfall2）或错误窗口。");
+                if(Process.GetProcessesByName("Titanfall2").Length>0||Process.GetProcessesByName("Titanfall2VRLauncher").Length>0)throw new IOException("请先关闭 Titanfall 2 和 VR 启动器，然后重试。如需强制结束，可在任务管理器中查找 Titanfall2 进程。");
                 var launchInfo=Manager.CreateVrLaunch(root);
                 status.Text="正在检查最新补丁版本……";
                 var release=await UpdateChecker.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version);
-                if(release.Version==null)throw new IOException("无法检查最新版本。检查网络连接，然后重试");
+                if(release.Version==null)throw new IOException("无法检查最新版本，请检查网络连接后重试。");
                 if(release.Newer) {
                     status.Text="正在下载最新补丁……";
-                    var exe=await Manager.Download(release,new Progress<int>(v=>status.Text="下载最新补丁 · "+v+"%"));
+                    var exe=await Manager.Download(release,new Progress<int>(v=>status.Text="正在下载更新："+v+"%"));
                     Process.Start(new ProcessStartInfo(exe,"--play "+Program.Quote(root)){UseShellExecute=true});SetBusy(false);Close();return;
                 }
                 Version installedVersion;
-                if(Version.TryParse(Manager.Installed(root,@"TF2VR\mods\\mod.json","Version"),out installedVersion) && UpdateChecker.ParseVersion(installedVersion.ToString())>UpdateChecker.ParseVersion(Assembly.GetExecutingAssembly().GetName().Version.ToString()))throw new IOException("已安装的中文补丁版本高于本程序。请使用最新版本的安装程序");
+                if(Version.TryParse(Manager.Installed(root,@"TF2VR\mods\Chinese.MenuTest\mod.json","Version"),out installedVersion) && UpdateChecker.ParseVersion(installedVersion.ToString())>UpdateChecker.ParseVersion(Assembly.GetExecutingAssembly().GetName().Version.ToString()))throw new IOException("已安装的中文补丁版本高于当前安装程序，请下载最新版本的安装程序后再操作。");
                 if(!Manager.IsReady(root,Assembly.GetExecutingAssembly().GetName().Version.ToString(3))) {
-                    status.Text="正在应用中文补丁…";
+                    status.Text="正在安装中文补丁…";
                     if(Program.IsAdministrator())await Task.Run(()=>RunInstaller("Install",root));
                     else {
                         var worker=Process.Start(new ProcessStartInfo(Application.ExecutablePath,"--worker Install "+Program.Quote(root)){UseShellExecute=true,Verb="runas",WindowStyle=ProcessWindowStyle.Hidden});
-                        await Task.Run(()=>worker.WaitForExit());int code=worker.ExitCode;worker.Dispose();if(code!=0)throw new IOException("应用补丁失败。检查游戏文件夹和安装状态。");
+                        await Task.Run(()=>worker.WaitForExit());int code=worker.ExitCode;worker.Dispose();if(code!=0)throw new IOException("安装补丁失败，请确认游戏文件夹正确，且 VR 模组已正常安装。");
                     }
                     Manager.MarkReady(root);
                 }
-                Process.Start(launchInfo);status.Text="已完成最新补丁检查，并已请求启动 VR 游戏。";RefreshInstalled();
-            }catch(System.ComponentModel.Win32Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text=ex.NativeErrorCode==1223?"请求的管理员权限被取消。":"无法启动。";messages.Text=ex.Message;}
-            catch(Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text="操作未完成。";messages.Text=ex.Message;}
+                Process.Start(launchInfo);status.Text="已是最新版本，正在启动 VR 游戏。";RefreshInstalled();
+            }catch(System.ComponentModel.Win32Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text=ex.NativeErrorCode==1223?"已请求的管理员选线被取消，游戏未启动。":"无法启动游戏，原因：";messages.Text=ex.Message;}
+            catch(Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text="操作未能完成，因为：";messages.Text=ex.Message;}
             finally{SetBusy(false);}
         }
         private void RefreshInstalled() {
             var vr=Manager.Installed(pathBox.Text,@".circuitlord-vr-mods\Titanfall2VR.json","version");
-            var patch=Manager.Installed(pathBox.Text,@"TF2VR\mods\\mod.json","Version");
+            var patch=Manager.Installed(pathBox.Text,@"TF2VR\mods\Chinese.MenuTest\mod.json","Version");
             ShowVersion(vrStatus,vrBadge,vr,latestVr);
             ShowVersion(patchStatus,patchBadge,patch,latest==null?null:latest.Version);
         }
@@ -328,7 +328,7 @@ namespace Zecole.TitanfallChinese
         }
         private void ShowVersion(Label label,Label badge,string installed,string remote) {
             var state=VersionState(installed,remote,checking);
-            label.Text="已安装版本   "+installed+"\r\n最新版本   "+(remote??"正在检查 / 验证连接");
+            label.Text="已安装版本   "+installed+"\r\n最新版本   "+(remote??"正在检查…");
             label.ForeColor=Muted;badge.Text=state;
             badge.ForeColor=state=="已是最新版本"?Color.FromArgb(89,213,162):state=="需要更新"?Color.FromArgb(255,194,94):Muted;
         }
@@ -339,7 +339,7 @@ namespace Zecole.TitanfallChinese
             progress.Visible=value;
         }
         private async Task CheckUpdate() {
-            if(checking||busy)return;checking=true;checkUpdate.Enabled=false;RefreshInstalled();updateStatus.Text="正在检查在线版本…";
+            if(checking||busy)return;checking=true;checkUpdate.Enabled=false;RefreshInstalled();updateStatus.Text="正在检查更新…";
             var patchTask=UpdateChecker.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version);var vrTask=Manager.VrVersion();
             await Task.WhenAll(patchTask,vrTask);if(IsDisposed)return;
             latest=patchTask.Result;latestVr=vrTask.Result;checking=false;
@@ -350,12 +350,12 @@ namespace Zecole.TitanfallChinese
             if(!Program.IsGame(pathBox.Text)){messages.Text="请先选择游戏安装目录。";return;}
             SetBusy(true);
             try {
-                status.Text="正在下载最新的中文补丁…";
-                var file=await Manager.Download(latest,new Progress<int>(p=>status.Text="下载中文补丁· "+p+"%"));
-                status.Text="文件校验完成 · 尝试切换到新版安装器。";
+                status.Text="正在下载更新…";
+                var file=await Manager.Download(latest,new Progress<int>(p=>status.Text="正在下载更新："+p+"%"));
+                status.Text="下载的文件已通过校验，正在启动新版安装程序…";
                 Process.Start(new ProcessStartInfo(file,"--apply Install "+Program.Quote(pathBox.Text)){UseShellExecute=true});
                 SetBusy(false);Close();
-            }catch(Exception ex){status.Text="更新未能完成。";messages.Text=ex.Message+"\r\n现有安装不会受到影响。";}
+            }catch(Exception ex){status.Text="更新未完成。";messages.Text=ex.Message+"\r\n现有安装不会受到影响。";}
             finally{SetBusy(false);}
         }
 
@@ -364,12 +364,12 @@ namespace Zecole.TitanfallChinese
             if (busy) return;
             try
             {
-                if (!Program.IsGame(gamePath)) throw new IOException("请选择包含 Titanfall2.exe 的游戏安装目录。");
+                if (!Program.IsGame(gamePath)) throw new IOException("请选择 Titanfall 2 的游戏安装目录（文件夹里应有 Titanfall2.exe）。");
                 gamePath = Path.GetFullPath(gamePath);
                 if (!File.Exists(Path.Combine(gamePath, "Titanfall2VRLauncher.exe")) || !File.Exists(Path.Combine(gamePath, @".circuitlord-vr-mods\Titanfall2VR.json")))
-                    throw new IOException("请先安装 VR 模组");
+                    throw new IOException("还没有安装 VR 模组，先安装 VR 模组，然后安装本补丁。");
                 if (Process.GetProcessesByName("Titanfall2").Length > 0 || Process.GetProcessesByName("Titanfall2VRLauncher").Length > 0)
-                    throw new IOException("使用任务管理器搜索“Titanfall2”然后关闭出现的程序，然后重新启动。");
+                    throw new IOException("请先关闭 Titanfall 2 和 VR 启动器，然后重新点击按钮。如果找不到窗口，可在任务管理器中结束 Titanfall2 进程。");
                 if (!Program.IsAdministrator())
                 {
                     var info = new ProcessStartInfo(Application.ExecutablePath, "--apply " + action + " " + Program.Quote(gamePath)) { UseShellExecute = true, Verb = "runas" };
@@ -382,19 +382,19 @@ namespace Zecole.TitanfallChinese
                 status.Text = action == "Install" ? "正在安装中文补丁…" : "正在恢复原始文件…";
                 messages.Text = status.Text;
                 string result = await Task.Run(delegate { return RunInstaller(action, gamePath); });
-                status.Text = action == "Install" ? "安装完成！通过 VR 模组安装程序启动游戏。" : "已恢复原始文件。";
-                messages.Text = status.Text + "\r\n\r\n当前的中文补丁基于 VR 模组 1.0.25 版本。\r\n如果模组版本高于此版本，可能会出现一些问题。\r\n游戏内的实际表现有待进一步验证。";
+                status.Text = action == "Install" ? "安装完成！请通过 VR 模组启动器进入游戏。" : "已移除中文补丁，并恢复为原始文件。";
+                messages.Text = status.Text + "\r\n\r\n本补丁对应 VR 模组 1.0.25 版本，VR 模组版本比这更高时可能出现问题。\r\n游戏内实际效果仍需实测验证。";
             }
             catch (System.ComponentModel.Win32Exception ex)
             {
                 Program.WriteErrorLog("安装或恢复中文补丁时启动管理员权限", ex);
-                status.Text = ex.NativeErrorCode == 1223 ? "申请的管理员权限被取消" : ex.Message;
+                status.Text = ex.NativeErrorCode == 1223 ? "已申请的管理员权限被取消，安装未开始" : ex.Message;
                 messages.Text = status.Text;
             }
             catch (Exception ex)
             {
                 Program.WriteErrorLog(action == "Install" ? "安装中文补丁" : "恢复原始文件", ex);
-                status.Text = "操作未完成";
+                status.Text = "操作未完成，因为";
                 messages.Text = ex.Message;
             }
             finally { SetBusy(false); RefreshInstalled(); }

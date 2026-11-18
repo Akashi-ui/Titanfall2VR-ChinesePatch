@@ -1010,7 +1010,7 @@ void function BlinkRui( var rui )
 {
 	while( file.isJumpkitOffline )
 	{
-		RuiSetString( rui, "msgText2", "작동 중지" )
+		RuiSetString( rui, "msgText2", "停止運作" )
 		wait 0.75
 		RuiSetString( rui, "msgText2", "" )
 		wait 0.75

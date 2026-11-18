@@ -14,7 +14,7 @@
     "scripts/vscripts/tf2vr_cockpit.gnut": "4c1c5ea13235d951168e1feb775dde9bb8531d857e6b478762b94ac108f01059",
     "scripts/vscripts/tf2vr_cockpit_lighting.nut": "0b617acb311376c6375c9658076a39558b562e3d9f438a454b37ad4b180b3e82",
     "scripts/vscripts/tf2vr_combat_memories.nut": "275c72364ff3bdc5b4f1162599a67540decf698c3f7441a8bf5d7c548b4ccbae",
-    "scripts/vscripts/tf2vr_dialogue.nut": "f2a1b1900b6a6d527fe3b6e9f16a354d1624bd0bb401c06c3a9df2de1b431fc1",
+    "scripts/vscripts/tf2vr_dialogue.nut": "428915d91ba9f23ebc86c1098506bd6aa06f31fa106a8fbce12f1d2479bba68f",
     "scripts/vscripts/tf2vr_embark.nut": "abcabf2dcf211125f02e97e7e5559ab4acb780152b2c11ad82aa08402d433129",
     "scripts/vscripts/tf2vr_embark_camera.nut": "f25e750f17acf692d66640645324b23fa1639056328afdb6c9890a910921b92c",
     "scripts/vscripts/tf2vr_ending.gnut": "19721a6d626c969466e4c510262d78d7d1abeb411d875f4def2904a58d8446e4",
@@ -22,9 +22,9 @@
     "scripts/vscripts/tf2vr_interactions.gnut": "593faae3966610994a01d7609c9aa3dfd7cc8144a2e611329e7fd811bda3a820",
     "scripts/vscripts/tf2vr_memories.nut": "068fe0879aa87a28acfbab46bd4d5912482b30a8174bef5961c9a6dd01ec0c78",
     "scripts/vscripts/tf2vr_memory_room.gnut": "b0bc51a604db8c0dfbf7a4da7942a8ae6c5673584d1a9587cf4345b42417a443",
-    "scripts/vscripts/tf2vr_menu.nut": "2fbe8c420857fd8ccdb4e904d58d1ac05943a4df22aa827383bafc0333acb49c",
+    "scripts/vscripts/tf2vr_menu.nut": "fa7f91b5321202b127090459219343f772a3080d98927cc45ba016f3c9dd6e05",
     "scripts/vscripts/tf2vr_pickups.gnut": "4a2ce0228fb7692c13045b325741080aebb2f984545b1559963c543e24511040",
-    "scripts/vscripts/tf2vr_prompts.nut": "e7ba9efb7d74330de0385ebce17380ff51258166efa4cd8c15f075a9f44ff728",
+    "scripts/vscripts/tf2vr_prompts.nut": "8896c62349ecfc10a496061709889c956973f5f04920316e9f3fa1f04fac7b2b",
     "scripts/vscripts/tf2vr_settings.nut": "7033f47cccf8b182795d102466a033ade5376e39628e49ad667c3c3702f5a26d",
     "scripts/vscripts/tf2vr_titan.gnut": "7abfafcdbe09707cee868863d1140ee88f36d48174242fc15b08024377cd2165",
     "scripts/vscripts/_utility.gnut": "a9a2068b9b3a9ad8bfa724c9a50f60e4a78dbceebb5387430c920130776832d7",
@@ -70,7 +70,8 @@
     "0855645e3980752ebf529b4e7c8e2bed32ec44b548add8ae4e833f573acdac64",
     "e4b580cf58994f347f00cfba79cf47ae0d05d9bbc70db633be1943760abd1990",
     "6b550331c17830999602f573c59307544bcb357838aad11ff00037cbe59523f3",
-    "9a555fe9f6fc19bd3ab3f81459643aaaa2c9f55350510d4db3917c3085818450"
+    "9a555fe9f6fc19bd3ab3f81459643aaaa2c9f55350510d4db3917c3085818450",
+    "9b0d00ed4e6dbfbea2e1f860dfd9827fecb60e6a76edf1ea7872d0dca97ccb2a"
   ],
   "compatibleFileVariants": {
     "scripts/vscripts/ui/panel_mainmenu.nut": [
@@ -83,12 +84,26 @@
       {
         "sha256": "c10e73237e5dac568f67e20d63c45f76b630873b9edc621204df48ba739da38e",
         "source": "variants/pre-1.0.25/scripts/vscripts/tf2vr_menu.nut"
+      },
+      {
+        "sha256": "2fbe8c420857fd8ccdb4e904d58d1ac05943a4df22aa827383bafc0333acb49c",
+        "source": "variants/pre-1.0.29/scripts/vscripts/tf2vr_menu.nut"
       }
     ],
     "scripts/vscripts/tf2vr_prompts.nut": [
       {
         "sha256": "549b9492d0046a5166caea5bb95509d0dfbe6dc60730acffe529163c30fd9379",
         "source": "variants/pre-1.0.25/scripts/vscripts/tf2vr_prompts.nut"
+      },
+      {
+        "sha256": "e7ba9efb7d74330de0385ebce17380ff51258166efa4cd8c15f075a9f44ff728",
+        "source": "variants/pre-1.0.29/scripts/vscripts/tf2vr_prompts.nut"
+      }
+    ],
+    "scripts/vscripts/tf2vr_dialogue.nut": [
+      {
+        "sha256": "f2a1b1900b6a6d527fe3b6e9f16a354d1624bd0bb401c06c3a9df2de1b431fc1",
+        "source": "variants/pre-1.0.29/scripts/vscripts/tf2vr_dialogue.nut"
       }
     ],
     "resource/ui/menus/ingame_sp.menu": [

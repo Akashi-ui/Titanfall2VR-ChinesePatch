@@ -23,6 +23,12 @@ void function TF2VR_MenuInit()
 	SetButtonRuiText( recenterButton, "#TF2VR_RECENTER" )
 	AddButtonEventHandler( recenterButton, UIE_CLICK, TF2VR_RecenterButton )
 	SetNavUpDown( [ Hud_GetChild( menu, "BtnChangeDifficulty" ), Hud_GetChild( menu, "BtnQuit" ), titanLoadoutButton, settingsButton, recenterButton ] )
+	// Titan abilities show their swipe in place of a key, vgui labels can't draw the RUI arrows
+	var loadout = Hud_GetChild( GetMenu( "SPTitanLoadoutMenu" ), "TitanLoadoutDisplay" )
+	Hud_SetText( Hud_GetChild( loadout, "OrdnanceHintPC" ), "上" )
+	Hud_SetText( Hud_GetChild( loadout, "SpecialHintPC" ), "前" )
+	Hud_SetText( Hud_GetChild( loadout, "AntirodeoHintPC" ), "下" )
+	Hud_SetText( Hud_GetChild( loadout, "CoreHintPC" ), "後" )
 	thread TF2VR_MenuThink()
 }
 

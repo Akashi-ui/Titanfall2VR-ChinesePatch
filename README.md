@@ -1,12 +1,12 @@
 ## 说明
 
-- 本补丁基于zecole的韩语翻译补丁（v0.2.29版本）进行修改，适用于**PCVR (Windows, Steam/EA)**平台的CircuitLord的泰坦陨落2 VR模组**1.0.25**版本。
+- 本补丁（**1.0.0版本**）基于zecole的韩语翻译补丁（v0.2.29版本）进行修改，适用于**PCVR (Windows, Steam/EA)**平台的CircuitLord的泰坦陨落2 VR模组**1.0.29**版本。
 -타이탄폴 2 VR 모드의 한국어 번역 패치를 찾고 계셨는데 실수로 이곳에 들어오셨다면, [여기](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch)를 클릭하여 zecole의 한국어 번역 패치를 다운로드하세요.
 - zecole的韩语补丁[仓库](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch)
 - 翻译了 VR 设置界面，游戏内有关VR的操作提示等。
-- 在部分 VR 操作提示中会出现字符变成方块的情况，拼尽全力但目前仍未解决。
-- 如果遇到未翻译的条目，写个[Issues](https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/issues/)让我知道，并且带上图片。
-- 在玩游戏时你可能会遇到VR晕动症，如果你感到恶心、头晕等不适，立刻摘下头显并休息一下
+- 如果你发现了不合适的翻译或错误，写一条[Issues](https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/issues/)让我知道，并且带上图片。(ㅅ´ ˘ `)♡
+- 安装器的在线版本检查功能可用，但不确定自动更新功能是否可用。
+- 在玩游戏时你可能会遇到VR晕动症，如果你感到类似晕车，或是恶心、头晕等情况，立刻暂停游戏并休息一下
 - 文件的SHA-256值可以在 `SHA256SUMS.txt`找到
 
 模组由Youtube创作者 **zecole** 原创，由Bilibili 噠喵 进行汉化翻译
@@ -39,7 +39,3 @@ Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Sour
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 https://openfontlicense.org
-
-## 报告问题和提出建议
-
-如果你发现了不合适的翻译或错误，请在[Issues](https://github.com/Akashi-ui/Titanfall2VR-ChinesePatch/issues/)中留下评论，可以的话请带上图片。

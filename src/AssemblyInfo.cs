@@ -3,5 +3,5 @@ using System.Reflection;
 [assembly: AssemblyDescription("基于原作者 Zecole 的韩文补丁进行修改的中文补丁")]
 [assembly: AssemblyCompany("uwu")]
 [assembly: AssemblyProduct("Titanfall 2 VR 中文补丁")]
-[assembly: AssemblyVersion("0.2.1")]
-[assembly: AssemblyFileVersion("0.2.1")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyFileVersion("1.0.0")]

@@ -1,12 +1,14 @@
 global function TF2VR_ChooseDialogue
 global function TF2VR_DialogueText
 
-string function TF2VR_DialogueText( string text, bool top, bool leftTouch )
+string function TF2VR_DialogueText( string text, bool top, int controller )
 {
 	if ( text == "" )
 		return ""
-	string button = top ? ( leftTouch ? "Y" : "B" ) : ( leftTouch ? "X" : "A" )
-	return "[左 " + button + "] " + Localize( text )
+	// Frame top takes d-pad up alone
+	array<string> tops = [ "左 B", "左 Y", "%$rui/tf2vr/dpad/up%" ]
+	array<string> bottoms = [ "左 A", "左 X", "%$rui/tf2vr/dpad/down%" ]
+	return "[" + ( top ? tops[controller] : bottoms[controller] ) + "] " + Localize( text )
 }
 
 table function TF2VR_ChooseDialogue( entity player, var rui, bool firstAvailable, bool secondAvailable, string firstText, string secondText, float intro, float timeout )
@@ -16,9 +18,9 @@ table function TF2VR_ChooseDialogue( entity player, var rui, bool firstAvailable
 	OnThreadEnd( function() { TF2VR_DialogueInput( false ) } )
 	float readyAt = Time() + intro
 	float expiresAt = readyAt + timeout
-	bool leftTouch = TF2VR_LeftUsesTouch() != 0
-	RuiSetString( rui, "text1", TF2VR_DialogueText( firstText, true, leftTouch ) )
-	RuiSetString( rui, "text2", TF2VR_DialogueText( secondText, false, leftTouch ) )
+	int controller = TF2VR_LeftController()
+	RuiSetString( rui, "text1", TF2VR_DialogueText( firstText, true, controller ) )
+	RuiSetString( rui, "text2", TF2VR_DialogueText( secondText, false, controller ) )
 	TF2VR_DialogueInput( true )
 	while ( Time() < expiresAt )
 	{

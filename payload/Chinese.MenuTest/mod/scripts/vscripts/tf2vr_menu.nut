@@ -13,7 +13,7 @@ void function TF2VR_MenuInit()
 	}
 	var menu = GetMenu( "InGameSPMenu" )
 	var titanLoadoutButton = Hud_GetChild( menu, "BtnDev" )
-	SetButtonRuiText( titanLoadoutButton, "#KO_TITAN_LOADOUT" )
+	SetButtonRuiText( titanLoadoutButton, "泰坦裝備" )
 	AddButtonEventHandler( titanLoadoutButton, UIE_CLICK, TF2VR_OpenTitanLoadout )
 	Hud_Show( titanLoadoutButton )
 	var settingsButton = Hud_GetChild( menu, "BtnVRSettings" )
@@ -28,8 +28,41 @@ void function TF2VR_MenuInit()
 	Hud_SetText( Hud_GetChild( loadout, "OrdnanceHintPC" ), "上" )
 	Hud_SetText( Hud_GetChild( loadout, "SpecialHintPC" ), "前" )
 	Hud_SetText( Hud_GetChild( loadout, "AntirodeoHintPC" ), "下" )
-	Hud_SetText( Hud_GetChild( loadout, "CoreHintPC" ), "后" )
+	Hud_SetText( Hud_GetChild( loadout, "CoreHintPC" ), "後" )
+	// the spotlight has no promos without a master server, so it holds the support card
+	var spotlight = Hud_GetChild( GetPanel( "MainMenuPanel" ), "SpotlightPanel" )
+	var supportButton = Hud_GetChild( spotlight, "SpotlightLarge" )
+	RuiSetFloat( Hud_GetRui( supportButton ), "basicImageAlpha", 0.0 )
+	RuiSetImage( Hud_GetRui( Hud_GetChild( spotlight, "SupportAvatar" ) ), "basicImage", $"rui/tf2vr/support" )
+	RuiSetFloat3( Hud_GetRui( Hud_GetChild( spotlight, "SupportBackdrop" ) ), "basicImageColor", < 0, 0, 0 > )
+	// Northstar blue
+	RuiSetFloat3( Hud_GetRui( Hud_GetChild( spotlight, "SupportAccent" ) ), "basicImageColor", < 101, 109, 207 > / 255.0 )
+	TF2VR_SupportFocus( supportButton, false )
+	AddButtonEventHandler( supportButton, UIE_GET_FOCUS, void function( var button ) { TF2VR_SupportFocus( button, true ) } )
+	AddButtonEventHandler( supportButton, UIE_LOSE_FOCUS, void function( var button ) { TF2VR_SupportFocus( button, false ) } )
+	AddButtonEventHandler( supportButton, UIE_CLICK, TF2VR_OpenSupportPage )
+	Hud_Show( spotlight )
 	thread TF2VR_MenuThink()
+}
+
+void function TF2VR_SupportFocus( var button, bool focused )
+{
+	var spotlight = Hud_GetParent( button )
+	RuiSetFloat( Hud_GetRui( Hud_GetChild( spotlight, "SupportBackdrop" ) ), "basicImageAlpha", focused ? 0.85 : 0.55 )
+	Hud_SetVisible( Hud_GetChild( spotlight, "SupportAccent" ), focused )
+	int body = focused ? 255 : 225
+	Hud_SetColor( Hud_GetChild( spotlight, "SupportText" ), body, body, body, 255 )
+}
+
+void function TF2VR_OpenSupportPage( var button )
+{
+	LaunchExternalWebBrowser( "https://ko-fi.com/circuitlord", WEBBROWSER_FLAG_FORCEEXTERNAL )
+	DialogData dialogData
+	dialogData.header = "OPENED ON DESKTOP"
+	dialogData.message = "Ko-fi is opened in your default browser on your desktop!"
+	AddDialogButton( dialogData, "OK" )
+	AddDialogFooter( dialogData, "#A_BUTTON_SELECT" )
+	OpenDialog( dialogData )
 }
 
 void function TF2VR_OpenSettings()
@@ -40,9 +73,9 @@ void function TF2VR_OpenSettings()
 void function TF2VR_OpenHighlights()
 {
 	DialogData dialogData
-	dialogData.header = "#KO_HIGHLIGHTS_TITLE"
-	dialogData.message = "#KO_HIGHLIGHTS_MESSAGE"
-	AddDialogButton( dialogData, "#KO_OPEN_FOLDER", TF2VR_OpenMemoryDirectory )
+	dialogData.header = "本地精彩片段"
+	dialogData.message = "Titanfall 2 VR 會錄製遊戲精彩片段並保存到你的電腦上。\n\n此模組不會上傳或分享影片。"
+	AddDialogButton( dialogData, "打開資料夾", TF2VR_OpenMemoryDirectory )
 	AddDialogButton( dialogData, "#CANCEL" )
 	AddDialogFooter( dialogData, "#A_BUTTON_SELECT" )
 	AddDialogFooter( dialogData, "#B_BUTTON_BACK" )

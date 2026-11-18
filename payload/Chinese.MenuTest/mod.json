@@ -1,7 +1,7 @@
 {
   "Name": "Chinese.MenuTest",
   "Description": "Simplified Chinese translation and Noto Sans CJK fonts; based on the TF2VR 1.0.25 Korean translation project",
-  "Version": "0.2.1",
+  "Version": "1.0.0",
   "LoadPriority": 100,
   "RequiredOnClient": false,
   "Localisation": [

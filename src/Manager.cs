@@ -10,7 +10,7 @@ namespace Zecole.TitanfallChinese {
  internal static class Manager {
   internal const string ManifestUrl="https://raw.githubusercontent.com/CircuitLord/CircuitLordVRModInstaller/main/manifest-v3.json";
   internal static string Installed(string root,string relative,string key) {
-   try {var d=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(File.ReadAllText(Path.Combine(root,relative)));return d[key] as string ?? "无法确认";} catch {return "未安装 / 无法确认";}
+   try {var d=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(File.ReadAllText(Path.Combine(root,relative)));return d[key] as string ?? "无法确认";} catch {return "未安装或无法确认";}
   }
   internal static async Task<string> VrVersion() {
    try {ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
@@ -22,12 +22,12 @@ namespace Zecole.TitanfallChinese {
   internal static System.Diagnostics.ProcessStartInfo CreateVrLaunch(string root) {
    root=Path.GetFullPath(root);
    foreach(var relative in new[]{"Titanfall2.exe","Titanfall2VRLauncher.exe",@"TF2VR\Northstar.dll",@"TF2VR\plugins\Titanfall2VR.dll",@"TF2VR\tools\crash_monitor.exe",@"TF2VR\tools\launch.json"})
-    if(!File.Exists(Path.Combine(root,relative)))throw new IOException("VR 模式文件缺失。请通过官方安装程序检查安装状态: "+relative);
+    if(!File.Exists(Path.Combine(root,relative)))throw new IOException("缺少 VR 模组文件，请用 VR 模组安装程序修复后重试。缺失文件："+relative);
    var settings=new JavaScriptSerializer().Deserialize<Dictionary<string,string[]>>(File.ReadAllText(Path.Combine(root,@"TF2VR\tools\launch.json")));
    var args=new List<string>();
    foreach(var key in new[]{"arguments","vrArguments"})foreach(var arg in settings[key]) {
     var value=arg.Replace("{profile}","TF2VR").Replace("{width}","1280").Replace("{height}","720").Replace("{sound}","1");
-    if(value.Contains("{")||value.Contains("}"))throw new IOException("需要检查 VR 启动设置。请通过官方安装程序启动。");
+    if(value.Contains("{")||value.Contains("}"))throw new IOException("VR 启动设置不完整，请通过 VR 模组启动器启动游戏。");
     args.Add(Program.Quote(value));
    }
    var info=new System.Diagnostics.ProcessStartInfo(Path.Combine(root,@"TF2VR\tools\crash_monitor.exe")) {WorkingDirectory=root,UseShellExecute=false};
@@ -65,20 +65,20 @@ namespace Zecole.TitanfallChinese {
   internal static void MarkReady(string root){File.WriteAllText(ReadyFile(root),Fingerprint(root));}
   internal static void Verify(string path,string hash) {
    using(var sha=SHA256.Create()) using(var input=File.OpenRead(path)) {
-    if(!BitConverter.ToString(sha.ComputeHash(input)).Replace("-","").Equals(hash,StringComparison.OrdinalIgnoreCase))throw new IOException("下载的文件验证失败。请重试。");
+    if(!BitConverter.ToString(sha.ComputeHash(input)).Replace("-","").Equals(hash,StringComparison.OrdinalIgnoreCase))throw new IOException("下载的文件校验不通过，重试或到发布页面手动下载。");
    }
   }
   internal static async Task<string> Download(UpdateResult release, IProgress<int> progress) {
-   if(release.Url==null || release.Sha256==null)throw new IOException("没有可验证的安装文件。请检查是否有最新版本。");
+   if(release.Url==null || release.Sha256==null)throw new IOException("没有找到可校验的安装文件，重试或到发布页面手动下载。");
    var folder=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Zecole","Titanfall2VR","Updates",Guid.NewGuid().ToString("N"));Directory.CreateDirectory(folder);
    var path=Path.Combine(folder,"Titanfall2VR-Chinese-Setup-v"+release.Version+".exe");
    try {
     using(var client=new HttpClient()) {client.Timeout=TimeSpan.FromMinutes(5);client.DefaultRequestHeaders.UserAgent.ParseAdd("Zecole-ChinesePatch");
      using(var response=await client.GetAsync(release.Url,HttpCompletionOption.ResponseHeadersRead)) {response.EnsureSuccessStatusCode();
       long length=response.Content.Headers.ContentLength ?? 0,total=0;
-      if(length>100*1024*1024)throw new IOException("安装文件大小超出预期范围。");
+      if(length>100*1024*1024)throw new IOException("安装文件大小异常，已中止下载。");
       using(var input=await response.Content.ReadAsStreamAsync())using(var output=File.Create(path)) {var buffer=new byte[65536];int count;
-       while((count=await input.ReadAsync(buffer,0,buffer.Length))>0) {total+=count;if(total>100*1024*1024)throw new IOException("安装文件太大。");await output.WriteAsync(buffer,0,count);progress.Report(length>0?(int)(total*100/length):0);}
+       while((count=await input.ReadAsync(buffer,0,buffer.Length))>0) {total+=count;if(total>100*1024*1024)throw new IOException("安装文件过大，已中止下载。");await output.WriteAsync(buffer,0,count);progress.Report(length>0?(int)(total*100/length):0);}
       }
      }
     }

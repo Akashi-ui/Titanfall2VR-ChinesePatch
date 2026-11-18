@@ -1,6 +1,6 @@
 {
-  "original_sha256": "815f0d130baf2532db2df6a8bff8b6e6eb6b25d16a1db792d8b8994f9183b634",
-  "translated_sha256": "16B0EC8EF098F4A47A780C84CD1A3CE4F50685E0D3674B4CB41A204DC2288291",
+  "original_sha256": "e18fd739b5d311112c8e60cc83a7ac33b001026f3f4c2a2d54d6ad4036d97550",
+  "translated_sha256": "01c33cc8444a3913ae4c1e077bde6d2135f9d3b49f132d3a6f0c4ab92c6fed41",
   "width": 1536,
   "height": 2048,
   "rows": [
@@ -98,6 +98,38 @@
         940,
         306,
         37
+      ]
+    },
+   {
+      "text": "还在加载？",
+      "original_bounds": [
+        620,
+        1063,
+        917,
+        1112
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        681,
+        1073,
+        195,
+        75
+      ]
+    },
+        {
+      "text": "在桌面上检查一下EA app，您可能需要登录",
+      "original_bounds": [
+        205,
+        1196,
+        1331,
+        1236
+      ],
+      "font_size": 39,
+      "output_bounds": [
+        396,
+        1198,
+        745,
+        75
       ]
     }
   ]
