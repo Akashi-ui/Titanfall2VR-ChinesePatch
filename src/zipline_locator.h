@@ -1,5 +1,7 @@
 // Locate the prompt by verified x64 instructions, string, and named CRT import.
 // No version offsets: ambiguous or structurally changed images are left untouched.
+// The first instruction is a REX-prefixed mov rcx, r64; 1.0.32 uses 49 8b ce
+// instead of the older 48 8b cd/c8, so accept both REX.W forms.
 struct ZiplineSite { U64 call, text, slot; };
 static bool Range(U64 at,U64 n,U64 size){return at<=size && n<=size-at;}
 static bool TextAt(const unsigned char* b,U64 size,U64 at,const char* text){
@@ -17,7 +19,7 @@ static bool FindZipline(const unsigned char* b,U64 size,ZiplineSite* result){
   if(!(flags&0x20000000)||!Range(va,len,size)||len<21)continue;
   for(U64 at=va;at<=va+len-21;at++){
    const unsigned char* c=b+at;
-   if(c[0]!=0x4c||c[1]!=0x8d||c[2]!=5||c[7]!=0xba||c[8]!=0||c[9]!=1||c[10]!=0||c[11]!=0||c[12]!=0x48||c[13]!=0x8b||(c[14]!=0xcd&&c[14]!=0xc8)||c[15]!=0xff||c[16]!=0x15)continue;
+   if(c[0]!=0x4c||c[1]!=0x8d||c[2]!=5||c[7]!=0xba||c[8]!=0||c[9]!=1||c[10]!=0||c[11]!=0||(c[12]!=0x48&&c[12]!=0x49)||c[13]!=0x8b||(c[14]&0xf8)!=0xc8||c[15]!=0xff||c[16]!=0x15)continue;
    I64 text=(I64)at+7+*(const int*)(c+3),slotAt=(I64)at+21+*(const int*)(c+17);
    if(text<0||slotAt<0||!Range((U64)slotAt,8,size)||!TextAt(b,size,(U64)text,"Press %use% to ride zipline"))continue;
    bool readonlyText=false;

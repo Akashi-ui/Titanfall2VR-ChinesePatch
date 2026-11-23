@@ -79,7 +79,7 @@ static U64 promptReturn=0,promptString=0;
 __declspec(noinline) static int CopyPrompt(char* dst,U64 size,const char* src) {
  if(_ReturnAddress()==vrModule+promptReturn && src==(const char*)(vrModule+promptString))
   // UTF-8: press right trigger to ride zipline. Kept within the original string slot.
-  return originalCopy(dst,size,"\xe6\x8c\x89\xe4\xb8\x8b\xe5\x8f\xb3\xe6\x89\xb3\xe6\x9c\xba\xe4\xb9\x98\xe5\x9d\x90\xe6\xbb\x91\xe7\xb4\xa2");
+  return originalCopy(dst,size,"\xe6\x8c\x89\xe4\xb8\x8b\xe5\x8f\xb3\xe6\x89\xb3\xe6\xa9\x9f\xe4\xb9\x98\xe5\x9d\x90\xe6\xbb\x91\xe7\xb4\xa2");
  return originalCopy(dst,size,src);
 }
 #include "zipline_locator.h"

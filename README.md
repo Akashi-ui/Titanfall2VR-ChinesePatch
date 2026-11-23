@@ -1,6 +1,6 @@
 ## 说明
 
-- 本补丁（**1.0.1版本**）基于zecole的韩语翻译补丁（v0.2.29版本）进行修改，适用于**PCVR (Windows, Steam/EA)**平台的CircuitLord的泰坦陨落2 VR模组**1.0.29**版本。
+- 本补丁（**1.0.2版本**）基于zecole的韩语翻译补丁（v0.2.29版本）进行修改，适用于**PCVR (Windows, Steam/EA)**平台的CircuitLord的泰坦陨落2 VR模组**1.0.29**版本。
 -타이탄폴 2 VR 모드의 한국어 번역 패치를 찾고 계셨는데 실수로 이곳에 들어오셨다면, [여기](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch)를 클릭하여 zecole의 한국어 번역 패치를 다운로드하세요.
 - zecole的韩语补丁[仓库](https://github.com/zecole-vr/Titanfall2VR-KoreanPatch)
 - 翻译了 VR 设置界面，游戏内有关VR的操作提示等。

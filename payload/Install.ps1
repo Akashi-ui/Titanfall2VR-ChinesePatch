@@ -12,6 +12,8 @@ try {
  $profileRoot=(Resolve-Path -LiteralPath (Join-Path $gamePath 'TF2VR')).Path
  $modPath=[IO.Path]::GetFullPath((Join-Path $profileRoot 'mods\Chinese.MenuTest'))
  $pluginPath=[IO.Path]::GetFullPath((Join-Path $profileRoot 'plugins\Chinese.CaptionLayout.dll'))
+ $promptPath=[IO.Path]::GetFullPath((Join-Path $profileRoot 'mods\Titanfall2VR.Cockpit\mod\scripts\vscripts\tf2vr_prompts.nut'))
+ $promptOriginal=Join-Path $profileRoot 'chinese-menu-backups\cockpit-tf2vr-prompts-original.nut'
  $startupPath=Join-Path $profileRoot 'mods\Titanfall2VR.Cockpit\mod\resource\tf2vr\startup\text.r8'
  $startupOriginal=Join-Path $profileRoot 'chinese-menu-backups\startup-text-original.r8'
  $startupManifest=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'VRStartup\manifest.json')|ConvertFrom-Json
@@ -19,8 +21,25 @@ try {
  $validBackup=(Test-Path -LiteralPath $startupOriginal) -and ((Get-FileHash -LiteralPath $startupOriginal -Algorithm SHA256).Hash -eq $startupManifest.original_sha256)
  $replaceStartup=($Action -eq 'Install' -and $startupHash -eq $startupManifest.original_sha256) -or ($startupHash -eq $startupManifest.translated_sha256 -and $validBackup)
  if(-not $replaceStartup){Write-Output '启动教程文件保持当前版本，未做替换。'}
- foreach($target in @($modPath,$pluginPath)){if(-not $target.StartsWith($profileRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '目标安装路径不正确，已取消安装。'}}
+ foreach($target in @($modPath,$pluginPath,$promptPath)){if(-not $target.StartsWith($profileRoot+'\',[StringComparison]::OrdinalIgnoreCase)){throw '目标安装路径不正确，已取消安装。'}}
  if(Test-Path -LiteralPath $modPath){$existing=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $modPath 'mod.json')|ConvertFrom-Json;if($existing.Name -ne 'Chinese.MenuTest'){throw '安装位置已经有其他模组，请先移除该模组或换一个游戏目录。'}}
+ $integration=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'integration-baseline.json')|ConvertFrom-Json
+ $promptBaseline=$integration.cockpit.PSObject.Properties['scripts/vscripts/tf2vr_prompts.nut'].Value
+ $promptVariants=@()
+ if($integration.compatibleFileVariants){
+  $variantEntry=$integration.compatibleFileVariants.PSObject.Properties['scripts/vscripts/tf2vr_prompts.nut']
+  if($variantEntry){foreach($variant in $variantEntry.Value){$promptVariants+=$variant.sha256}}
+ }
+ $promptHash=if(Test-Path -LiteralPath $promptPath){(Get-FileHash -LiteralPath $promptPath -Algorithm SHA256).Hash}else{''}
+ $promptKnown=($promptHash -and (($promptHash -eq $promptBaseline) -or ($promptVariants -contains $promptHash)))
+ $promptOriginalValid=(Test-Path -LiteralPath $promptOriginal) -and (($promptVariants -contains (Get-FileHash -LiteralPath $promptOriginal -Algorithm SHA256).Hash) -or ((Get-FileHash -LiteralPath $promptOriginal -Algorithm SHA256).Hash -eq $promptBaseline))
+ $localizedPromptHashes=@()
+ foreach($rel in @('Chinese.MenuTest\mod\scripts\vscripts\tf2vr_prompts.nut','variants\pre-1.0.29\scripts\vscripts\tf2vr_prompts.nut')){
+  $source=Join-Path $PSScriptRoot $rel
+  if(Test-Path -LiteralPath $source){$localizedPromptHashes+=(Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash}
+ }
+ $promptIsOurs=$localizedPromptHashes -contains $promptHash
+ $canReplacePrompt=$promptKnown -or $promptIsOurs
  $stage=$null
  if($Action -eq 'Install') {
   $inventory=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'package-hashes.json')|ConvertFrom-Json
@@ -33,7 +52,6 @@ try {
   if($sourceManifest.Name -ne 'Chinese.MenuTest'){throw '中文补丁信息不完整，请重新下载安装程序。'}
   $stage=Join-Path $profileRoot ('chinese-menu-staging-'+[Guid]::NewGuid().ToString('N'))
   New-Item -ItemType Directory -Path $stage | Out-Null
-  $integration=Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $PSScriptRoot 'integration-baseline.json')|ConvertFrom-Json
   function MatchesBaseline($path,$hash){return (Test-Path -LiteralPath $path) -and (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -eq $hash}
   $northstarKnown=MatchesBaseline (Join-Path $profileRoot 'Northstar.dll') $integration.'Northstar.dll'
   $vrKnown=MatchesBaseline (Join-Path $profileRoot 'plugins/Titanfall2VR.dll') $integration.'plugins/Titanfall2VR.dll'
@@ -97,7 +115,7 @@ $backup = Join-Path $profileRoot ('chinese-menu-backups\v' + $patchVersion + '-'
  }
  $enabledPath=Join-Path $profileRoot 'enabledmods.json'
  if(Test-Path -LiteralPath $enabledPath){Copy-Item -LiteralPath $enabledPath -Destination $backup}
- $modMoved=$false;$pluginMoved=$false;$newMod=$false;$newPlugin=$false;$startupChanged=$false
+ $modMoved=$false;$pluginMoved=$false;$newMod=$false;$newPlugin=$false;$startupChanged=$false;$promptChanged=$false;$promptBackedUp=$false
  try {
   if(Test-Path -LiteralPath $modPath){[IO.Directory]::Move($modPath,(Join-Path $backup 'Chinese.MenuTest'));$modMoved=$true}
   if(Test-Path -LiteralPath $pluginPath){[IO.File]::Move($pluginPath,(Join-Path $backup 'Chinese.CaptionLayout.dll'));$pluginMoved=$true}
@@ -105,12 +123,27 @@ $backup = Join-Path $profileRoot ('chinese-menu-backups\v' + $patchVersion + '-'
    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $pluginPath)|Out-Null
    [IO.Directory]::Move((Join-Path $stage 'Chinese.MenuTest'),$modPath);$newMod=$true
    if($northstarKnown){[IO.File]::Move((Join-Path $stage 'Chinese.CaptionLayout.dll'),$pluginPath);$newPlugin=$true}
+   if($canReplacePrompt){
+    $promptSourceInstalled=Join-Path $modPath 'mod\scripts\vscripts\tf2vr_prompts.nut'
+    if($promptKnown -and (Test-Path -LiteralPath $promptPath) -and -not $promptOriginalValid){
+     Copy-Item -LiteralPath $promptPath -Destination $promptOriginal -Force
+     $promptOriginalValid=$true;$promptBackedUp=$true
+    }
+    if((Test-Path -LiteralPath $promptSourceInstalled) -and $promptOriginalValid){
+     Copy-Item -LiteralPath $promptSourceInstalled -Destination $promptPath -Force
+     $promptChanged=$true
+    }
+   }
    if(Test-Path -LiteralPath $enabledPath){
     $enabled=Get-Content -Raw -Encoding UTF8 -LiteralPath $enabledPath|ConvertFrom-Json
     if(-not $enabled.PSObject.Properties['Chinese.MenuTest']){$enabled|Add-Member -NotePropertyName 'Chinese.MenuTest' -NotePropertyValue ([PSCustomObject]@{})}
     $enabled.'Chinese.MenuTest'|Add-Member -NotePropertyName $sourceManifest.Version -NotePropertyValue $true -Force
     [IO.File]::WriteAllText($enabledPath,($enabled|ConvertTo-Json -Depth 10),[Text.UTF8Encoding]::new($false))
    }
+  }
+  if($Action -eq 'Restore' -and $promptOriginalValid -and ($promptKnown -or $promptIsOurs) -and (Test-Path -LiteralPath $promptOriginal)){
+   Copy-Item -LiteralPath $promptOriginal -Destination $promptPath -Force
+   $promptChanged=$true
   }
   if($replaceStartup){
   $startupChanged=$true
@@ -120,6 +153,7 @@ $backup = Join-Path $profileRoot ('chinese-menu-backups\v' + $patchVersion + '-'
   if((Get-FileHash -LiteralPath $startupPath -Algorithm SHA256).Hash -ne $expectedStartup){throw 'VR 启动教程文件校验失败，安装已回滚。'}
   }
  } catch {
+  if($promptChanged -and $promptOriginalValid -and (Test-Path -LiteralPath $promptOriginal)){Copy-Item -LiteralPath $promptOriginal -Destination $promptPath -Force}
   if($startupChanged){Copy-Item -LiteralPath (Join-Path $backup 'startup-text-before.r8') -Destination $startupPath -Force}
   if($newMod){[IO.Directory]::Move($modPath,(Join-Path $stage 'Chinese.MenuTest'))}
   if($newPlugin){[IO.File]::Move($pluginPath,(Join-Path $stage 'Chinese.CaptionLayout.dll'))}
@@ -129,6 +163,9 @@ $backup = Join-Path $profileRoot ('chinese-menu-backups\v' + $patchVersion + '-'
   throw
  }
  Write-Output ('现有文件的备份位置：'+$backup)
+ if($Action -eq 'Install' -and $promptChanged){Write-Output '按键提示脚本已替换为本地化版本。'}
+ elseif($Action -eq 'Install'){Write-Output '按键提示脚本保持当前版本（未匹配或无法安全替换）。'}
+ elseif($promptChanged){Write-Output '按键提示脚本已恢复原始版本。'}
  if($Action -eq 'Install'){Write-Output '中文补丁已安装。请通过 VR 模组启动器进入游戏。'}
  else {Write-Output '已移除中文补丁，并将可确认的启动引导文件恢复为原始版本。'}
 }catch{Write-Host $_.Exception.Message -ForegroundColor Red;exit 1}

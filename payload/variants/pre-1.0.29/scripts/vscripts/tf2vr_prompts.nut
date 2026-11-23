@@ -26,6 +26,74 @@ string function TF2VR_TitanKeyHint( string key )
 	return slot == -1 ? key : "%$rui/tf2vr/arrows/" + TF2VR_TitanGestures()[slot] + "%"
 }
 
+// Chinese patch: translate the native use prompt without replacing controller input.
+string function TF2VR_ButtonLabel( string key )
+{
+	string lower = key.tolower()
+	if ( lower == "right trigger" || lower == "right_trigger" || lower == "r trigger" || lower == "rt" || lower == "r_trigger" || lower == "%[r_trigger]%" )
+		return "右扳機"
+	if ( lower == "left trigger" || lower == "left_trigger" || lower == "l trigger" || lower == "lt" || lower == "l_trigger" || lower == "%[l_trigger]%" )
+		return "左扳機"
+	if ( lower == "left menu" )
+		return "左側選單鍵"
+	switch ( key )
+	{
+		case "left A":
+			return "左側 A 鍵"
+		case "left B":
+			return "左側 B 鍵"
+		case "left X":
+			return "左側 X 鍵"
+		case "left Y":
+			return "左側 Y 鍵"
+		case "left Menu":
+			return "左側選單鍵"
+		case "right trigger":
+		case "Right Trigger":
+		case "RT":
+		case "R_TRIGGER":
+		case "%[R_TRIGGER]%":
+			return "右扳機"
+		case "left trigger":
+		case "Left Trigger":
+		case "LT":
+		case "L_TRIGGER":
+		case "%[L_TRIGGER]%":
+			return "左扳機"
+		case "right stick":
+		case "%[STICK2]%":
+			return "右搖桿"
+		case "left stick":
+		case "%[STICK1]%":
+			return "左搖桿"
+		case "right grip":
+			return "右握持鍵"
+		case "left grip":
+			return "左握持鍵"
+		case "right A":
+		case "A":
+			return "右側 A 鍵"
+		case "right B":
+		case "B":
+			return "右側 B 鍵"
+		case "right X":
+		case "X":
+			return "右側 X 鍵"
+		case "right Y":
+		case "Y":
+			return "右側 Y 鍵"
+	}
+	return key
+}
+
+string function TF2VR_UseButtonLabel( int weaponHand )
+{
+	string native = Localize( "%use%" )
+	if ( native == "" || native == "%use%" )
+		native = weaponHand == 0 ? "右扳機" : "左扳機"
+	return TF2VR_ButtonLabel( native )
+}
+
 int function TF2VR_PromptGesture( OnscreenHint hint )
 {
 	switch ( hint.locStringGamepad )
@@ -55,8 +123,8 @@ int function TF2VR_PromptGesture( OnscreenHint hint )
 string function TF2VR_PromptText( OnscreenHint hint, int weaponHand, bool leftTouch )
 {
 	array<string> gestureNames = [ "上", "前", "下", "後" ]
-	string useButton = "%use%"
-	string abilityButton = weaponHand == 0 ? "右扳機" : "左扳機"
+	string useButton = TF2VR_UseButtonLabel( weaponHand )
+	string abilityButton = TF2VR_ButtonLabel( weaponHand == 0 ? "右扳機" : "左扳機" )
 	string pauseButton = leftTouch ? "左側 Y 鍵" : "左側 B 鍵"
 	string detonateButton = leftTouch ? "左側 X 鍵" : "左側 A 鍵"
 	string reloadButton = weaponHand == 0 ? pauseButton : "右側 B 鍵"

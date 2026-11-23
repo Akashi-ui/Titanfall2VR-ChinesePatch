@@ -30,13 +30,13 @@ namespace Zecole.TitanfallChinese
             {
                 try
                 {
-                    if (!IsAdministrator()) throw new UnauthorizedAccessException("提权工作进程没有管理员权限。");
+                    if (!IsAdministrator()) throw new UnauthorizedAccessException("需要管理员权限。");
                     InstallerForm.RunInstaller("Install", args[2]);
                     return 0;
                 }
                 catch (Exception ex)
                 {
-                    WriteErrorLog("管理员工作进程安装补丁", ex);
+                    WriteErrorLog("使用管理员权限安装补丁", ex);
                     return 1;
                 }
             }
@@ -309,7 +309,7 @@ namespace Zecole.TitanfallChinese
                     Manager.MarkReady(root);
                 }
                 Process.Start(launchInfo);status.Text="已是最新版本，正在启动 VR 游戏。";RefreshInstalled();
-            }catch(System.ComponentModel.Win32Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text=ex.NativeErrorCode==1223?"已请求的管理员选线被取消，游戏未启动。":"无法启动游戏，原因：";messages.Text=ex.Message;}
+            }catch(System.ComponentModel.Win32Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text=ex.NativeErrorCode==1223?"已请求的管理员权限被取消，游戏未启动。":"无法启动游戏，原因：";messages.Text=ex.Message;}
             catch(Exception ex){Program.WriteErrorLog("检查更新或启动游戏", ex);status.Text="操作未能完成，因为：";messages.Text=ex.Message;}
             finally{SetBusy(false);}
         }
@@ -369,7 +369,7 @@ namespace Zecole.TitanfallChinese
                 if (!File.Exists(Path.Combine(gamePath, "Titanfall2VRLauncher.exe")) || !File.Exists(Path.Combine(gamePath, @".circuitlord-vr-mods\Titanfall2VR.json")))
                     throw new IOException("还没有安装 VR 模组，先安装 VR 模组，然后安装本补丁。");
                 if (Process.GetProcessesByName("Titanfall2").Length > 0 || Process.GetProcessesByName("Titanfall2VRLauncher").Length > 0)
-                    throw new IOException("请先关闭 Titanfall 2 和 VR 启动器，然后重新点击按钮。如果找不到窗口，可在任务管理器中结束 Titanfall2 进程。");
+                    throw new IOException("先关闭 Titanfall 2 和 VR 启动器，然后重新点击按钮。（可在任务管理器中搜索并结束 Titanfall2 进程）");
                 if (!Program.IsAdministrator())
                 {
                     var info = new ProcessStartInfo(Application.ExecutablePath, "--apply " + action + " " + Program.Quote(gamePath)) { UseShellExecute = true, Verb = "runas" };
@@ -383,7 +383,7 @@ namespace Zecole.TitanfallChinese
                 messages.Text = status.Text;
                 string result = await Task.Run(delegate { return RunInstaller(action, gamePath); });
                 status.Text = action == "Install" ? "安装完成！请通过 VR 模组启动器进入游戏。" : "已移除中文补丁，并恢复为原始文件。";
-                messages.Text = status.Text + "\r\n\r\n本补丁对应 VR 模组 1.0.25 版本，VR 模组版本比这更高时可能出现问题。\r\n游戏内实际效果仍需实测验证。";
+                messages.Text = status.Text + "\r\n\r\n本补丁对应 VR 模组 1.0.32 版本，VR 模组版本比这更高时可能出现问题。\r\n游戏内实际效果仍需实测验证。";
             }
             catch (System.ComponentModel.Win32Exception ex)
             {

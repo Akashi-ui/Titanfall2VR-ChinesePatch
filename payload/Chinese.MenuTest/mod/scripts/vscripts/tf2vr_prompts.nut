@@ -49,6 +49,13 @@ string function TF2VR_TitanKeyHint( string key )
 // Chinese patch: on screen label for a controller key, arrow tokens and unknown keys stay unchanged
 string function TF2VR_ButtonLabel( string key )
 {
+	string lower = key.tolower()
+	if ( lower == "right trigger" || lower == "right_trigger" || lower == "r trigger" || lower == "rt" || lower == "r_trigger" || lower == "%[r_trigger]%" )
+		return "右扳機"
+	if ( lower == "left trigger" || lower == "left_trigger" || lower == "l trigger" || lower == "lt" || lower == "l_trigger" || lower == "%[l_trigger]%" )
+		return "左扳機"
+	if ( lower == "left menu" )
+		return "左側選單鍵"
 	switch ( key )
 	{
 		case "left A":
@@ -61,15 +68,104 @@ string function TF2VR_ButtonLabel( string key )
 			return "左側 Y 鍵"
 		case "left Menu":
 			return "左側選單鍵"
+		case "right trigger":
+		case "Right Trigger":
+		case "RT":
+		case "R_TRIGGER":
+		case "%[R_TRIGGER]%":
+			return "右扳機"
+		case "left trigger":
+		case "Left Trigger":
+		case "LT":
+		case "L_TRIGGER":
+		case "%[L_TRIGGER]%":
+			return "左扳機"
+		case "right stick":
+		case "%[STICK2]%":
+			return "右搖桿"
+		case "left stick":
+		case "%[STICK1]%":
+			return "左搖桿"
+		case "right grip":
+			return "右握持鍵"
+		case "left grip":
+			return "左握持鍵"
+		case "right X":
+			return "右側 X 鍵"
+		case "right Y":
+		case "Y":
+			return "右側 Y 鍵"
 		case "right A":
 		case "A":
 			return "右側 A 鍵"
 		case "right B":
+		case "B":
 			return "右側 B 鍵"
 		case "X":
 			return "右側 X 鍵"
 	}
 	return key
+}
+
+// The native use prompt is normally resolved by the game, not by this script.
+// Keep that result when it is already localized or a RUI glyph; translate the
+// English fallback, and only then use the hand-dependent trigger name.
+string function TF2VR_UseButtonLabel( int weaponHand )
+{
+	string native = Localize( "%use%" )
+	string lower = native.tolower()
+	if ( lower == "use" || lower == "#use" || lower == "%use%" || lower == "use_button" )
+		native = Localize( "USE" )
+	lower = native.tolower()
+	if ( native == "" || lower == "use" || lower == "#use" || lower == "%use%" || lower == "use_button" )
+		native = weaponHand == 0 ? "右扳機" : "左扳機"
+	return TF2VR_ButtonLabel( native )
+}
+
+// The game expands %use% and the other prompt tokens only when the RUI draws
+// the hint, which is after this script returns.  Translate the resolved English
+// names (and any still-visible tokens) in one common post-processing step.
+string function TF2VR_TranslateButtons( string text, int weaponHand, int controller )
+{
+	if ( text == "" )
+		return text
+	string use = TF2VR_UseButtonLabel( weaponHand )
+	bool frame = controller == TF2VR_CONTROLLER_FRAME
+	string leftSecondary = TF2VR_ButtonLabel( TF2VR_LeftButton( controller, false ) )
+	string reload = weaponHand == 0 ? leftSecondary : TF2VR_ButtonLabel( frame ? "X" : "right B" )
+	string jump = TF2VR_ButtonLabel( frame ? "A" : "right A" )
+	string detonate = TF2VR_ButtonLabel( TF2VR_LeftButton( controller, true ) )
+	string aim = weaponHand == 0 ? "左扳機" : "右扳機"
+
+	text = StringReplace( text, "right trigger", "右扳機", true )
+	text = StringReplace( text, "left trigger", "左扳機", true )
+	text = StringReplace( text, "right shoulder", "右肩鍵", true )
+	text = StringReplace( text, "left shoulder", "左肩鍵", true )
+	text = StringReplace( text, "right bumper", "右肩鍵", true )
+	text = StringReplace( text, "left bumper", "左肩鍵", true )
+	text = StringReplace( text, "right stick", "右搖桿", true )
+	text = StringReplace( text, "left stick", "左搖桿", true )
+	text = StringReplace( text, "right grip", "右握持鍵", true )
+	text = StringReplace( text, "left grip", "左握持鍵", true )
+	text = StringReplace( text, "right A", "右側 A 鍵", true )
+	text = StringReplace( text, "left A", "左側 A 鍵", true )
+	text = StringReplace( text, "right B", "右側 B 鍵", true )
+	text = StringReplace( text, "left B", "左側 B 鍵", true )
+	text = StringReplace( text, "right X", "右側 X 鍵", true )
+	text = StringReplace( text, "left X", "左側 X 鍵", true )
+	text = StringReplace( text, "right Y", "右側 Y 鍵", true )
+	text = StringReplace( text, "left Y", "左側 Y 鍵", true )
+	text = StringReplace( text, "%use%", use, true )
+	text = StringReplace( text, "%jump%", jump, true )
+	text = StringReplace( text, "%reload%", reload, true )
+	text = StringReplace( text, "%melee%", "右搖桿", true )
+	text = StringReplace( text, "%ability%", use, true )
+	text = StringReplace( text, "%detonate%", detonate, true )
+	text = StringReplace( text, "%fire%", use, true )
+	text = StringReplace( text, "%attack%", use, true )
+	text = StringReplace( text, "%aim%", aim, true )
+	text = StringReplace( text, "%weaponPickup%", "握持鍵", true )
+	return text
 }
 
 int function TF2VR_PromptGesture( OnscreenHint hint )
@@ -98,19 +194,19 @@ int function TF2VR_PromptGesture( OnscreenHint hint )
 	return -1
 }
 
-string function TF2VR_PromptText( OnscreenHint hint, int weaponHand, int controller )
+string function TF2VR_PromptTextRaw( OnscreenHint hint, int weaponHand, int controller )
 {
 	array<string> gestureNames = [ "上", "前", "下", "後" ]
-	string useButton = "%use%"
-	string abilityButton = weaponHand == 0 ? "右扳機" : "左扳機"
+	string useButton = TF2VR_UseButtonLabel( weaponHand )
+	string abilityButton = TF2VR_ButtonLabel( weaponHand == 0 ? "右扳機" : "左扳機" )
 	string leftSecondary = TF2VR_ButtonLabel( TF2VR_LeftButton( controller, false ) )
 	bool frame = controller == TF2VR_CONTROLLER_FRAME
 	// Frame pauses with its left menu button, other controllers share left secondary with left hand reload
 	string pauseButton = frame ? TF2VR_ButtonLabel( "left Menu" ) : leftSecondary
 	string detonateButton = TF2VR_ButtonLabel( TF2VR_LeftButton( controller, true ) )
 	// Frame right B, X and Y all reload, X is closest to the stick
-	string reloadButton = weaponHand == 0 ? leftSecondary : TF2VR_ButtonLabel( frame ? "X" : "right B" )
-	string jumpButton = TF2VR_ButtonLabel( frame ? "A" : "right A" )
+	string reloadButton = weaponHand == 0 ? leftSecondary : TF2VR_ButtonLabel( frame ? "X" : "右 B" )
+	string jumpButton = TF2VR_ButtonLabel( frame ? "A" : "右 A" )
 
 	switch ( hint.locStringGamepad )
 	{
@@ -187,13 +283,13 @@ string function TF2VR_PromptText( OnscreenHint hint, int weaponHand, int control
 		case "#TIMESHIFT_HINT_PRESENT":
 			return "按下 " + abilityButton + " 切換時間"
 		case "#TRAINING_HINT_LEECH":
-			return "長按" + useButton + "駭入附近的幽靈"
+			return "長按 " + useButton + " 駭入附近的幽靈"
 		case "#TRAINING_HINT_GAUNTLET_RESTART":
-			return "按下" + pauseButton + "選擇重新開始訓練"
+			return "按下 " + pauseButton + " 選擇重新開始訓練"
 		case "#HINT_LOGBOOK_UPDATED":
-			return "記錄已更新。騰出左手，然後按下" + pauseButton
+			return "記錄已更新。騰出左手，然後按下 " + pauseButton
 		case "#HINT_DASH":
-			return "使用左搖桿調整方向，然後按下" + jumpButton + "進行衝刺"
+			return "使用左搖桿調整方向，然後按下 " + jumpButton + " 進行衝刺"
 		case "#TITAN_TRAINING_HINT_VORTEX":
 		case "#TITAN_TRAINING_HINT_VORTEX_KBM":
 			return "按住左扳機並向前揮動。鬆開扳機即可反彈來襲的子彈"
@@ -203,13 +299,22 @@ string function TF2VR_PromptText( OnscreenHint hint, int weaponHand, int control
 		case "#CRANE_OPERATION_HINT_KEYBOARD":
 		case "#CRANE_OPERATION_HINT_GAMEPAD":
 		case "#CRANE_OPERATION_HINT_GAMEPAD_SOUTHPAW":
-			return "使用左搖桿移動起重機，按下" + useButton + "將其放下"
+			return "使用左搖桿移動起重機，按下 " + useButton + " 將其放下"
 		case "#HINT_WEAPON_PRESS":
 		case "#HINT_WEAPON_HOLD":
 			if ( TF2VR_PromptGesture( hint ) < 0 )
-				return hint.locStringGamepad
+			{
+				string rawHint = Localize( hint.locStringGamepad )
+				return rawHint == "" ? hint.locStringGamepad : rawHint
+			}
 			return "按住左扳機，然後作出「" + gestureNames[TF2VR_PromptGesture( hint )] + "」動作使用" + Localize( hint.stringArg2 )
 	}
 
-	return hint.locStringGamepad
+	string localizedHint = Localize( hint.locStringGamepad )
+	return localizedHint == "" ? hint.locStringGamepad : localizedHint
+}
+
+string function TF2VR_PromptText( OnscreenHint hint, int weaponHand, int controller )
+{
+	return TF2VR_TranslateButtons( TF2VR_PromptTextRaw( hint, weaponHand, controller ), weaponHand, controller )
 }
