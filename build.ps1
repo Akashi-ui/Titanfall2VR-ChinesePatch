@@ -1,4 +1,4 @@
-﻿param([string]$OutputName = "Titanfall2VR-Chinese-Setup-v1.0.2.exe")
+﻿param([string]$OutputName = "Titanfall2VR-Chinese-Setup-v1.0.3.exe")
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 $dist = Join-Path $root 'dist'

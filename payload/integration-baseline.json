@@ -64,6 +64,7 @@
     "scripts/vscripts/weapons/mp_titanweapon_heat_shield.nut": "53e87eb871cc122672be9e11532a53c3043cf7b8edf935c91f00102f8cdfeb26",
     "scripts/vscripts/weapons/sp_weapon_arc_tool.nut": "5e087d2d0b7cd950cc2921f5eef9963a8642a41c981ba8d3166aec701f6f78f8",
     "scripts/vscripts/weapons/_vortex.nut": "100bc82da8078d12da54d744511585c0f5243bd00330ef5f196641d50bdcdc18",
+    "resource/ui/menus/panels/spotlight.res": "a632869165b739f3f5b381c0d98d5e6c918f3d8e15ed7555f4e7809398185c91",
     "resource/ui/menus/video.menu": "4911478a16592ca8622304b152b3def6351f9648303966d7607ca2456a88a3b0"
   },
   "compatibleVrDllHashes": [

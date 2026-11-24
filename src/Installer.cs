@@ -278,7 +278,7 @@ namespace Zecole.TitanfallChinese
             ButtonStyle(vrInstaller,"下载 VR 模组",24,631,252,false);vrInstaller.Click+=delegate{Process.Start(new ProcessStartInfo("https://github.com/CircuitLord/CircuitLordVRModInstaller/releases/latest"){UseShellExecute=true});};
             ButtonStyle(restore,"移除中文补丁",288,631,174,false);restore.Click+=async delegate{await Apply("Restore",pathBox.Text);};
             downloadUpdate.Text="查看更新日志（GitHub）";downloadUpdate.SetBounds(486,640,240,27);downloadUpdate.LinkColor=Accent;Controls.Add(downloadUpdate);downloadUpdate.LinkClicked+=delegate{Process.Start(new ProcessStartInfo(UpdateChecker.LatestPage){UseShellExecute=true});};
-            messages.SetBounds(26,684,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="本汉化基于 YouTube 作者 Zecole 的韩语版翻译，由 Bilibili「噠喵」汉化。请在游戏内「设置 → 音频」中开启字幕。\r\n本补丁对应 VR 模组 1.0.25 版本，游戏内显示效果仍需实测。";Controls.Add(messages);
+            messages.SetBounds(26,684,748,51);messages.Multiline=true;messages.ReadOnly=true;messages.BorderStyle=BorderStyle.None;messages.BackColor=BackColor;messages.ForeColor=Muted;messages.Text="本汉化基于 YouTube 作者 Zecole 的韩语版翻译，由 Bilibili「噠喵」汉化。请在游戏内「设置 → 音频」中开启字幕。\r\n本补丁对应 VR 模组 1.0.32 版本，游戏内显示效果仍需实测。";Controls.Add(messages);
             AttachCardContents();pathBox.TextChanged+=delegate{pathTip.SetToolTip(pathBox,pathBox.Text);RefreshInstalled();};Shown+=async delegate{RefreshInstalled();await CheckUpdate();};
             FormClosing+=delegate(object sender,FormClosingEventArgs e){if(busy)e.Cancel=true;};
         }
